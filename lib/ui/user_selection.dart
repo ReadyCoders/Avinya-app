@@ -1,3 +1,6 @@
+import 'package:avinyaapp/ui/EntrepreneursHomepage/entre_homepage.dart';
+import 'package:avinyaapp/ui/SocialHomepage/social_homepage.dart';
+import 'package:avinyaapp/ui/StudentHomepage/student_homepage.dart';
 import 'package:flutter/material.dart';
 
 import '../modals/constants.dart';
@@ -36,9 +39,9 @@ class _UserSelectionState extends State<UserSelection> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                UserSelector(size: size, myConstants: myConstants,title: "Student/Members"),
-                UserSelector(size: size, myConstants: myConstants,title: "Entrepreneurs"),
-                UserSelector(size: size, myConstants: myConstants,title: "Social Welfare"),
+                UserSelector(size: size, myConstants: myConstants,title: "Student/Members", page: HomePageStudentsMembers(),),
+                UserSelector(size: size, myConstants: myConstants,title: "Entrepreneurs",page: HomePageEntrepreneurs(),),
+                UserSelector(size: size, myConstants: myConstants,title: "Social Welfare",page: HomePageSocial(),),
               ],
 
             ),

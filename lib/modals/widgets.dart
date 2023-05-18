@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-import '../ui/Home_page.dart';
 import 'constants.dart';
 
 class UserSelector extends StatelessWidget {
@@ -9,17 +7,20 @@ class UserSelector extends StatelessWidget {
     required this.size,
     required this.myConstants,
     required this.title,
+    required this.page,
   });
 
   final Size size;
   final Constants myConstants;
   final String title;
+  final Widget page;
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> HomePageStudentsMembers()));
+        Navigator.push(context, MaterialPageRoute(builder: (context)=> page));
         print(title+" Pressed");
       },
       child: Container(
