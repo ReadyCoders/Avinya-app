@@ -20,12 +20,11 @@ class UserSelector extends StatelessWidget {
 
     return GestureDetector(
       onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=> page));
-        print(title+" Pressed");
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=> page));
       },
       child: Container(
-          width: size.width,
-          height: size.height*.15,
+          width: size.width*0.6,
+          height: 50,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(40)),
               gradient: const LinearGradient(
@@ -43,7 +42,7 @@ class UserSelector extends StatelessWidget {
                 )
               ]
           ),
-          child: Center(child: Text(title,style: TextStyle(color: myConstants.avinyaText,fontSize: 30),))),
+          child: Center(child: Text(title,style: TextStyle(color: Colors.white,fontSize: 30),))),
     );
   }
 }
