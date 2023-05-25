@@ -25,7 +25,7 @@ class _UserSelectionState extends State<UserSelection> {
         elevation: 0,
         title: Padding(
           padding: const EdgeInsets.only(top: 20.0),
-          child: Center(child: Text("AVINYA",style: TextStyle(color: myConstants.avinyaText,fontSize: 30),)),
+          child: Center(child: Text("AVINYA",style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
         ),
       ),
       body: Stack(
@@ -35,7 +35,7 @@ class _UserSelectionState extends State<UserSelection> {
               bottom: 0,
               child: Container(
                 decoration: BoxDecoration(
-                  color: myConstants.avinyaText,
+                  color: myConstants.DarkBlue,
                   borderRadius: BorderRadius.only(topLeft: Radius.circular(40),topRight: Radius.circular(40)),
                   //boxShadow: [BoxShadow(color: Colors.black,blurRadius: 15,)]
                 ),
@@ -62,7 +62,7 @@ class _UserSelectionState extends State<UserSelection> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 20,),
-                      Text("LOGIN",style: TextStyle(color: myConstants.avinyaText,fontWeight: FontWeight.bold,fontSize: 40),),
+                      Text("LOGIN",style: TextStyle(color: myConstants.DarkBlue,fontWeight: FontWeight.bold,fontSize: 40),),
                       SizedBox(height: 15,),
                       UserSelector(size: size, myConstants: myConstants,title: "Student/Members", page: HomePageStudentsMembers(),),
                       UserSelector(size: size, myConstants: myConstants,title: "Entrepreneurs",page: HomePageEntrepreneurs(),),

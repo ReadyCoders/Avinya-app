@@ -37,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
             children: [
                 Center(child: Image.asset("assets/avinyaLogo.jpg",height: 200,)),
                 SizedBox(height: 20,),
-                Center(child: Text("AVINYA",style: TextStyle(fontSize: 70,fontWeight: FontWeight.bold,color: myConstants.avinyaText),)),
+                Center(child: Text("AVINYA",style: TextStyle(fontSize: 70,fontWeight: FontWeight.bold,color: myConstants.DarkBlue),)),
 
 
             ],

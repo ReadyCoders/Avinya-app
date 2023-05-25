@@ -1,7 +1,7 @@
 import 'package:avinyaapp/ui/user_selection.dart';
 import 'package:flutter/material.dart';
-
 import '../../modals/constants.dart';
+import '../../modals/widgets.dart';
 
 class HomePageStudentsMembers extends StatefulWidget {
   const HomePageStudentsMembers({Key? key}) : super(key: key);
@@ -33,7 +33,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
             child: Image.asset("assets/profile.png"),
           ),
         ),
-        title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.avinyaText,fontSize: 30),)),
+        title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
         elevation: 0,
         backgroundColor: myConstants.bgColor,
         actions: [
@@ -47,7 +47,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
                   top: 5,
                     right: 25,
 
-                    child: IconButton(onPressed: (){print("Open chat");},icon: Icon(Icons.message,color: myConstants.avinyaText,size: 35,),)),
+                    child: IconButton(onPressed: (){print("Open chat");},icon: Icon(Icons.message,color: myConstants.DarkBlue,size: 35,),)),
                 Positioned(
                   top: 4,
                     right: 15,
@@ -65,7 +65,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(2.0),
-                      child: Text(notificationno.toString(),style: TextStyle(color: myConstants.avinyaText,fontWeight: FontWeight.bold, fontSize: 15),),
+                      child: Text(notificationno.toString(),style: TextStyle(color: myConstants.DarkBlue,fontWeight: FontWeight.bold, fontSize: 15),),
                     )))
               ],
             ),
@@ -83,7 +83,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
             width: size.width,
             height: size.height*0.9,
             decoration: BoxDecoration(
-              color: myConstants.avinyaText,
+              color: myConstants.DarkBlue,
               borderRadius: const BorderRadius.only(topRight: Radius.circular(50),topLeft: Radius.circular(50)),
             ),
 
@@ -148,41 +148,13 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
               BottomNavigationBarItem(icon: Icon(Icons.quiz),label: "Quiz"),
               BottomNavigationBarItem(icon: Icon(Icons.video_call),label: "Meet")
             ],
-            selectedItemColor: myConstants.avinyaText,
+            selectedItemColor: myConstants.DarkBlue,
             currentIndex: selectedIndex,
             onTap: OnTapped,
           ),
         ),
       ),
       );
-  }
-}
-
-class Featureswidget extends StatelessWidget {
-  const Featureswidget({
-    super.key,
-    required this.myConstants, required this.heading, required this.page,
-
-  });
-
-  final Constants myConstants;
-  final String heading;
-  final Widget page;
-
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>page));
-      },
-      child: Container(decoration: BoxDecoration(boxShadow:[BoxShadow(offset: Offset(1, 2),color: myConstants.primaryColor,blurRadius: 5)],image: DecorationImage(image: AssetImage("assets/detailbg.png"),fit: BoxFit.fill),color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(30))),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10.0,left: 25),
-        child: Text(heading,style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-      ),
-      ),
-    );
   }
 }
 
