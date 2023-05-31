@@ -1,8 +1,13 @@
+import 'package:avinyaapp/app_state.dart';
 import 'package:avinyaapp/ui/splash_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(ChangeNotifierProvider(
+    create: (context) => ApplicationState(),
+    builder: ((context, child) => const MyApp()),
+  ));
 }
 
 class MyApp extends StatelessWidget {
