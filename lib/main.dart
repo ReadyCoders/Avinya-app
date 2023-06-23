@@ -19,6 +19,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Avinya App',
+      theme: ThemeData(
+        useMaterial3: true,
+        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+      ),
       home: SplashScreen(),
     );
   }

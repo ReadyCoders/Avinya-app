@@ -7,6 +7,9 @@ class ApplicationState extends ChangeNotifier{
   String name="Login As";
   int user_selected= 0;
   String user= "Student/Members";
+  var selected=-1;
+
+
   void change(){
     this.name="Changed";
     notifyListeners();

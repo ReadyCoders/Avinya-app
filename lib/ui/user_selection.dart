@@ -55,18 +55,37 @@ class UserHome extends StatelessWidget {
 
         )),
         Positioned(
-            top: size.height*0.6,
+            top: size.height*0.65,
             left: 20,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text("WELCOME TO AVINYA",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 40),),
+                  Text("WELCOME TO AVINYA",style: TextStyle(color: Colors.white,fontWeight: FontWeight.bold,fontSize: 35),),
                   SizedBox(height: 10,),
-                  Text("A singular App to \nConnect, Learn and Help",style: TextStyle(color: Colors.white,fontSize: 30)),
+                  Text("A Single Platform to \nConnect, Learn and Help",style: TextStyle(color: Colors.white,fontSize: 30)),
 
                 ]
             )),
+
         Positioned(
+          bottom: size.height*0.07,
+            child: GestureDetector(
+                onTap: (){
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePageStudentsMembers()));
+                },
+                child: Opacity(
+                    opacity: 0.85,
+                    child: SizedBox(
+                        width:size.width,
+                        child: Center(
+                            child: Container(
+                                decoration:BoxDecoration(borderRadius:BorderRadius.all(Radius.circular(20)),color: Colors.white,),
+                                width: size.width*.6,
+                                height: 50,
+                                child: Center(
+                                    child: Text("Get Started",style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold,color: Colors.black.withOpacity(.7)),))))))))
+
+        /*Positioned(
             bottom: 0,
             child: Container(
               decoration: const BoxDecoration(
@@ -138,7 +157,7 @@ class UserHome extends StatelessWidget {
                   Positioned(bottom:20,right:40,child: GestureDetector(onTap: (){Navigator.push(context, MaterialPageRoute(builder: (context)=> appState.pushpage()));},child: Container(decoration:BoxDecoration(color: myConstants.primaryColor,borderRadius: const BorderRadius.all(Radius.circular(30))),height: 40,width: 80,child: const Icon(Icons.arrow_forward)),))
                 ],
               ),
-        )),
+        )),*/
       ],
     )
     );

@@ -1,3 +1,5 @@
+import 'package:avinyaapp/ui/StudentHomepage/feature/news_feed.dart';
+import 'package:avinyaapp/ui/StudentHomepage/feature/projects.dart';
 import 'package:avinyaapp/ui/user_selection.dart';
 import 'package:flutter/material.dart';
 import '../../modals/constants.dart';
@@ -25,7 +27,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
     Constants myConstants= Constants();
 
     return Scaffold(
-      backgroundColor: myConstants.bgColor,
+      backgroundColor: Color(0xeeffffff),
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -35,7 +37,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
         ),
         title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
         elevation: 0,
-        backgroundColor: myConstants.bgColor,
+        backgroundColor: Color(0xeeeeeeee),
         actions: [
           SizedBox(
             width: 50,
@@ -83,7 +85,11 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
             width: size.width,
             height: size.height*0.9,
             decoration: BoxDecoration(
-              color: myConstants.DarkBlue,
+              //color: myConstants.secondaryColor,
+              image: DecorationImage(
+                image: AssetImage("assets/UserBG.jpeg",),
+                fit: BoxFit.cover
+              ),
               borderRadius: const BorderRadius.only(topRight: Radius.circular(50),topLeft: Radius.circular(50)),
             ),
 
@@ -96,7 +102,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
                 height: 100,
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
                 child: const Center(child: Text("BANNER HERE")),
 
@@ -114,15 +120,15 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 20,
                 children: [
-                  Featureswidget(myConstants: myConstants, heading: 'News Feed', page: UserSelection(),),
-                  Featureswidget(myConstants: myConstants, heading: 'Mentorship', page: UserSelection(),),
-                  Featureswidget(myConstants: myConstants, heading: 'Projects', page: UserSelection(),),
-                  Featureswidget(myConstants: myConstants, heading: 'Events', page: UserSelection(),),
-                  Featureswidget(myConstants: myConstants, heading: 'Courses', page: UserSelection(),),
-                  Featureswidget(myConstants: myConstants, heading: 'Books', page: UserSelection(),),
-                  Featureswidget(myConstants: myConstants, heading: 'Internship', page: UserSelection(),),
-                  Featureswidget(myConstants: myConstants, heading: 'Gift', page: UserSelection(),),
-                  Featureswidget(myConstants: myConstants, heading: 'Review', page: UserSelection(),),
+                  Featureswidget(myConstants: myConstants, heading: 'NEWS FEED', page: UserFeed(),Imageurl: "assets/news.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'MENTORSHIP', page: UserSelection(),Imageurl: "assets/Mentorship.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'PROJECTS', page: ProjectsPage(),Imageurl: "assets/Projects.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'EVENTS', page: UserSelection(),Imageurl: "assets/Events.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'COURSES', page: UserSelection(),Imageurl: "assets/Courses.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'BOOKS', page: UserSelection(),Imageurl: "assets/Books.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'INTERNSHIP', page: UserSelection(),Imageurl: "assets/Internship.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'GIFT', page: UserSelection(),Imageurl: "assets/Gift.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'REVIEW', page: UserSelection(),Imageurl: "assets/Review.png",),
                 ],),
           ))
           /*Positioned(
