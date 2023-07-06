@@ -1,3 +1,10 @@
+import 'package:avinyaapp/ui/StudentHomepage/feature/Books_page.dart';
+import 'package:avinyaapp/ui/StudentHomepage/feature/CoursesPage.dart';
+import 'package:avinyaapp/ui/StudentHomepage/feature/Gift_page.dart';
+import 'package:avinyaapp/ui/StudentHomepage/feature/Internship_page.dart';
+import 'package:avinyaapp/ui/StudentHomepage/feature/MentorshipPage.dart';
+import 'package:avinyaapp/ui/StudentHomepage/feature/Review_page.dart';
+import 'package:avinyaapp/ui/StudentHomepage/feature/events.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/news_feed.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/projects.dart';
 import 'package:avinyaapp/ui/user_selection.dart';
@@ -121,14 +128,14 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
                 mainAxisSpacing: 20,
                 children: [
                   Featureswidget(myConstants: myConstants, heading: 'NEWS FEED', page: UserFeed(),Imageurl: "assets/news.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'MENTORSHIP', page: UserSelection(),Imageurl: "assets/Mentorship.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'MENTORSHIP', page: MentorsPage(),Imageurl: "assets/Mentorship.png",),
                   Featureswidget(myConstants: myConstants, heading: 'PROJECTS', page: ProjectsPage(),Imageurl: "assets/Projects.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'EVENTS', page: UserSelection(),Imageurl: "assets/Events.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'COURSES', page: UserSelection(),Imageurl: "assets/Courses.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'BOOKS', page: UserSelection(),Imageurl: "assets/Books.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'INTERNSHIP', page: UserSelection(),Imageurl: "assets/Internship.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'GIFT', page: UserSelection(),Imageurl: "assets/Gift.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'REVIEW', page: UserSelection(),Imageurl: "assets/Review.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'EVENTS', page: EventsPage(),Imageurl: "assets/Events.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'COURSES', page: CoursesPage(),Imageurl: "assets/Courses.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'BOOKS', page: BooksPage(),Imageurl: "assets/Books.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'INTERNSHIP', page: InternPage(),Imageurl: "assets/Internship.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'GIFT', page: GiftPage(),Imageurl: "assets/Gift.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'REVIEW', page: ReviewPage(),Imageurl: "assets/Review.png",),
                 ],),
           ))
           /*Positioned(

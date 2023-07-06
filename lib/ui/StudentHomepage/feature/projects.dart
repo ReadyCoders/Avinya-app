@@ -28,7 +28,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
     Constants myConstants= Constants();
 
     return Scaffold(
-      backgroundColor: Color(0xeeffffff),
+      backgroundColor: Color(0xeeeeeeee),
       appBar: AppBar(
         leading: Padding(
           padding: const EdgeInsets.all(5.0),
@@ -38,8 +38,42 @@ class _ProjectsPageState extends State<ProjectsPage> {
         ),
         title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
         elevation: 0,
-        backgroundColor: Color(0xeeeeeeee),
-        actions: [SizedBox(width: 50,)],
+        backgroundColor: Color(0xdddddddd),
+        actions: [
+          SizedBox(
+            width: 50,
+            height: 50,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Positioned(
+                    top: 5,
+                    right: 25,
+
+                    child: IconButton(onPressed: (){print("Open chat");},icon: Icon(Icons.message,color: myConstants.DarkBlue,size: 35,),)),
+                Positioned(
+                    top: 4,
+                    right: 15,
+                    child: Container(
+                        decoration: BoxDecoration(
+                            color: myConstants.primaryColor,
+                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [
+                              const BoxShadow(
+                                offset: Offset(0, 2),
+                                blurRadius: 5,
+                                color: Colors.black,
+                              )
+                            ]
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Text(notificationno.toString(),style: TextStyle(color: myConstants.DarkBlue,fontWeight: FontWeight.bold, fontSize: 15),),
+                        )))
+              ],
+            ),
+          )
+        ],
       ),
       body: Stack(
         clipBehavior: Clip.none,

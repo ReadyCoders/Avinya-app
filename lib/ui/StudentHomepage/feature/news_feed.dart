@@ -1,9 +1,13 @@
+import 'package:avinyaapp/modals/NewsClass.dart';
 import 'package:avinyaapp/modals/constants.dart';
+import 'package:avinyaapp/services/services.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:avinyaapp/app_state.dart';
 import 'package:outlined_text/outlined_text.dart';
 import 'package:provider/provider.dart';
+import 'package:toggle_switch/toggle_switch.dart';
+
 
 class UserFeed extends StatefulWidget {
   const UserFeed({Key? key}) : super(key: key);
@@ -13,18 +17,46 @@ class UserFeed extends StatefulWidget {
 }
 
 class _UserFeedState extends State<UserFeed> {
+  _UserFeedState(){
+    readNews();
+  }
+
+  int notificationno=35;
+  Constants myConstants= Constants();
+  List<News> Message=[];
+  List<News> ImportantMessage=[];
+  Services _s = Services();
+  Future<void> readNews() async{
+    List<News> temp=await _s.read() as List<News>;
+    List<News> dupNews= [];
+    List<News> dupImpo=[];
+    for(var element in temp){
+      if(element.isImportant){
+        dupImpo.add(element);
+      }
+      dupNews.add(element);
+    }
+    setState(() {
+      Message = dupNews;
+      ImportantMessage = dupImpo;
+    });
+  }
+
+  @override
+  void initstate(){
+    readNews();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    var myapp= context.watch<ApplicationState>;
+    var app2 = context.watch<ApplicationState>();
     Size size= MediaQuery.of(context).size;
-    int notificationno=35;
-    Constants myConstants= Constants();
-    Map<String,dynamic> Message={};
-    Map<String,dynamic> ImportantMessage={};
+    //Map<String,dynamic> ImportantMessage={};
     //var ImportantMessage= {"Title1":"Description1","Title2":"Description2","Title3":"Description3","Title4":"Description4","Title5":"Description5","Title6":"Description6","Title7":"Description7"};
     //var Message= {"Title1":"Description1","Title2":"Description2","Title3":"Description3","Title4":"Description4","Title5":"Description5","Title6":"Description6","Title7":"Description7"};
-    bool ismember=false;
-
+    bool ismember=true;
+    bool isimportant=false;
     Future<void> AddMessage(BuildContext context) async{
       var titlecontroller = TextEditingController();
       var desccontroller = TextEditingController();
@@ -33,17 +65,39 @@ class _UserFeedState extends State<UserFeed> {
         barrierDismissible: false, // user must tap button!
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Add news'),
+            title: const Text('Add news',style: TextStyle(fontSize: 32),),
             content: SingleChildScrollView(
               child: Column(
                 children: [
                   TextField(
                     controller: titlecontroller,
-                    decoration: InputDecoration(labelText: "Title"),
+                    decoration: InputDecoration(labelText: "Title",),
                   ),
                   TextField(
                     controller: desccontroller,
                     decoration: InputDecoration(labelText: "Description"),
+                  ),
+                  SizedBox(height: 30,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("Important?",style: TextStyle(fontSize: 20)),
+                      ToggleSwitch(
+                        customWidths: [60.0, 40.0],
+                        cornerRadius: 10.0,
+                        activeBgColors: [[Colors.green], [Colors.redAccent]],
+                        activeFgColor: Colors.white,
+                        inactiveBgColor: Colors.grey,
+                        inactiveFgColor: Colors.white,
+                        totalSwitches: 2,
+                        labels: ['YES', ''],
+                        icons: [null, Icons.cancel],
+                        onToggle: (index) {
+                          app2.currentimportant=(index==0);
+                          app2.notifyListeners();
+                        },
+                      ),
+                    ],
                   )
                 ],
               )
@@ -51,6 +105,18 @@ class _UserFeedState extends State<UserFeed> {
             actions: <Widget>[
               ElevatedButton(
                 child: const Text('Add'),
+                onPressed: () {
+                  var currentNews = News(title: titlecontroller.text, desc: desccontroller.text, isImportant: app2.currentimportant,id: titlecontroller.text+desccontroller.text.length.toString());
+                  print(currentNews.title);
+                  print(currentNews.desc);
+                  print(currentNews.isImportant);
+                  _s.addNews(currentNews);
+                  readNews();
+                  Navigator.of(context).pop();
+                },
+              ),
+              ElevatedButton(
+                child: const Text('Cancel'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -148,7 +214,7 @@ class _UserFeedState extends State<UserFeed> {
                             ),
                             height: 50,
                             child: Center(child:
-                                Text(ImportantMessage.keys.toList()[index]),
+                                Text(Message[index].title),
                             ),
                           ),
                         );
@@ -184,7 +250,7 @@ class _UserFeedState extends State<UserFeed> {
                       var myapp = context.watch<ApplicationState>();
                     return GestureDetector(
                       onTap: (){
-                        myapp.selected=index;
+                        (myapp.selected!=index)?myapp.selected=index:myapp.selected=-1;
                         myapp.notifyListeners();
                       },
                       child: Padding(
@@ -202,13 +268,13 @@ class _UserFeedState extends State<UserFeed> {
                           child: Center(child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(Message.keys.toList()[index]),
+                              Text(Message[index].title),
                               Visibility(
                                   visible: myapp.selected==index,
                                   child: Column(
                                     children: [
                                       SizedBox(height: 30,),
-                                      Text(Message.values.toList()[index]),
+                                      Text(Message[index].desc),
                                     ],
                                   ))
                             ],

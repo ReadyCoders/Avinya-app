@@ -124,7 +124,14 @@ class Startupwidget extends StatelessWidget {
                   Positioned(
                       top: 0,
                       right: 10,
-                      child: ClipOval(child: Image.asset(Imageurl,width: 60,))),
+                      child: Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                            color: Colors.white
+                          ),
+                          child: ClipOval(child: Image.asset(Imageurl,width: 60,)))),
                   Positioned(
                     top: 0,
                   left: 10,
@@ -177,7 +184,7 @@ class Startupwidget extends StatelessWidget {
                 fit: BoxFit.cover,
               ),
               boxShadow:[BoxShadow(offset: Offset(1, 2),color: Colors.black /*myConstants.primaryColor*/,blurRadius: 5)],
-              color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(80))),
+              color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(40))),
             //child: Center(child: Text(heading,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)),
 
           ),
