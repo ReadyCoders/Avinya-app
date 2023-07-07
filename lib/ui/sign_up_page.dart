@@ -39,7 +39,7 @@ class _SignPageState extends State<SignUpPage> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [Colors.black, Colors.black.withOpacity(0)],
-                            stops: [0.7, 0.9]).createShader(rect);
+                            stops: [0.8, 0.95]).createShader(rect);
                       },
                       blendMode: BlendMode.dstIn,
                       child: Container(color: Color(0xeeeeeeee)),
@@ -122,6 +122,7 @@ class _SignPageState extends State<SignUpPage> {
                               readOnly: true,
                               onTap: ()async{
                                 DateTime? pickedDate = await showDatePicker(
+
                                     context: context,
                                     initialDate: DateTime.now(),
                                     firstDate: DateTime(1990),
@@ -137,7 +138,7 @@ class _SignPageState extends State<SignUpPage> {
                               },
 
                             ),
-                            SizedBox(height: 40,),
+                            SizedBox(height: 30,),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -159,7 +160,7 @@ class _SignPageState extends State<SignUpPage> {
                                     }),
                               ],
                             ),
-                            SizedBox(height: 40,),
+                            SizedBox(height: 30,),
                             TextFormField(
                               //initialValue: "Password",
                               decoration: InputDecoration(

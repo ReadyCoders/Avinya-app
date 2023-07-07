@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:avinyaapp/app_state.dart';
 import 'package:avinyaapp/modals/constants.dart';
+import 'package:avinyaapp/ui/SocialHomepage/social_homepage.dart';
 import 'package:avinyaapp/ui/StudentHomepage/student_homepage.dart';
 import 'package:avinyaapp/ui/sign_up_page.dart';
 import 'package:flutter/material.dart';
@@ -127,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                          onPressed: (){
                            print(myapp.namecontroller.text);
                            print(myapp.passwordcontroller.text);
-                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePageStudentsMembers()));
+                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePageSocial()));
                          },
                          child: Text("LOGIN",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),),style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),)),
                        SizedBox(height: 30,),
