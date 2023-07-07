@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "458259510432",
+    "project_id": "avinya-17d9d",
+    "storage_bucket": "avinya-17d9d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:458259510432:android:0735c09c19a850622445c5",
+        "android_client_info": {
+          "package_name": "com.example.avinyaapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "458259510432-g88d4ibasvfojk5bbfbk48g2phk980lu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAkl2DZCkbHxs4fwFGK11VVfc61PFG68g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "458259510432-g88d4ibasvfojk5bbfbk48g2phk980lu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
