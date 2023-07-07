@@ -34,6 +34,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
     Constants myConstants= Constants();
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xeeffffff),
       appBar: AppBar(
         leading: Padding(

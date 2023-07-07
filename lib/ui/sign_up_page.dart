@@ -68,119 +68,141 @@ class _SignPageState extends State<SignUpPage> {
                               )
                           ),),
                       ],)),
-                Positioned(top:250,child: SizedBox(
+                Positioned(top:200,child: SizedBox(
                   width: size.width*.92,
-                  height: size.height*.6,
+                  height: size.height*.8,
                   child: Center(
-                    child: Container(
-                      width: size.width*.8,
-                      height: size.height*.6,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              fillColor: const Color(0xFFD9D9D9),
-                              filled: true,
-                              labelText: "User Name",
-                              hintText: "User Name",
-                              border: OutlineInputBorder(),
-                            ),
-                            onChanged: (text){
-                              myapp.namecontroller.text=text;
-                              myapp.notifyListeners();
-                            },
-                          ),
-                          SizedBox(height: 40,),
-                          TextFormField(
-                            decoration: InputDecoration(
-                              fillColor: const Color(0xFFD9D9D9),
-                              filled: true,
-                              labelText: "Email id",
-                              hintText: "Email id",
-                              border: OutlineInputBorder(),
-
-                            ),
-                            onChanged: (text){
-                              myapp.emailController.text=text;
-                              myapp.notifyListeners();
-                            },
-                            controller: myapp.emailController,
-                          ),
-                          SizedBox(height: 40,),
-                          TextField(
-                            controller: myapp.datecontroller,
-                            decoration: InputDecoration(
-                              fillColor: const Color(0xFFD9D9D9),
-                              filled: true,
-                              hintText: "Date Of Birth",
-                              border: OutlineInputBorder(),
-                              icon: Icon(Icons.calendar_today),
-                            ),
-                            readOnly: true,
-                            onTap: ()async{
-                              DateTime? pickedDate = await showDatePicker(
-                                  context: context,
-                                  initialDate: DateTime.now(),
-                                  firstDate: DateTime(1990),
-                                  lastDate: DateTime.now());
-                              if(pickedDate!=null){
-                                String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
-                                print(formattedDate);
-                                setState(() {
-                                  myapp.datecontroller.text=formattedDate;
-                                  myapp.notifyListeners();
-                                });
-                              }
-                            },
-
-                          ),
-                          SizedBox(height: 40,),
-                          TextFormField(
-                            //initialValue: "Password",
-                            decoration: InputDecoration(
+                    child: SingleChildScrollView(
+                      child: Container(
+                        width: size.width*.8,
+                        height: size.height*.7,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
+                            TextFormField(
+                              decoration: InputDecoration(
                                 fillColor: const Color(0xFFD9D9D9),
                                 filled: true,
-                                labelText: "Password",
-                                border: OutlineInputBorder()
-                            ),
-                            obscureText: true,
-                            controller: myapp.passwordcontroller,
-                            onChanged: (text){
-                              myapp.passwordcontroller.text=text;
-                              myapp.notifyListeners();
-                            },
-                          ),
-                          SizedBox(height: 40,),
-                          TextFormField(
-                            //initialValue: "Password",
-                            decoration: InputDecoration(
-
-                                fillColor: const Color(0xFFD9D9D9),
-                                filled: true,
-                                labelText: "Confirm Password",
+                                labelText: "User Name",
+                                hintText: "User Name",
                                 border: OutlineInputBorder(),
+                              ),
+                              onChanged: (text){
+                                myapp.namecontroller.text=text;
+                                myapp.notifyListeners();
+                              },
                             ),
-                            obscureText: true,
-                            controller: myapp.confirmpasswordcontroller,
-                            onChanged: (text){
-                              myapp.confirmpasswordcontroller.text=text;
-                              myapp.notifyListeners();
-                            },
-                          ),
-                          SizedBox(height: 20,),
-                          Center(child: ElevatedButton(
+                            SizedBox(height: 40,),
+                            TextFormField(
+                              decoration: InputDecoration(
+                                fillColor: const Color(0xFFD9D9D9),
+                                filled: true,
+                                labelText: "Email id",
+                                hintText: "Email id",
+                                border: OutlineInputBorder(),
 
-                              style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),
-                              onPressed: (){
-                            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
-                            print(myapp.namecontroller.text);
-                          }, child: Text("Register",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),))),
+                              ),
+                              onChanged: (text){
+                                myapp.emailController.text=text;
+                                myapp.notifyListeners();
+                              },
+                            ),
+                            SizedBox(height: 40,),
+                            TextField(
+                              controller: myapp.datecontroller,
+                              decoration: InputDecoration(
+                                fillColor: const Color(0xFFD9D9D9),
+                                filled: true,
+                                hintText: "Date Of Birth",
+                                border: OutlineInputBorder(),
+                                icon: Icon(Icons.calendar_today),
+                              ),
+                              readOnly: true,
+                              onTap: ()async{
+                                DateTime? pickedDate = await showDatePicker(
+                                    context: context,
+                                    initialDate: DateTime.now(),
+                                    firstDate: DateTime(1990),
+                                    lastDate: DateTime.now());
+                                if(pickedDate!=null){
+                                  String formattedDate = DateFormat('dd-MM-yyyy').format(pickedDate);
+                                  print(formattedDate);
+                                  setState(() {
+                                    myapp.datecontroller.text=formattedDate;
+                                    myapp.notifyListeners();
+                                  });
+                                }
+                              },
+
+                            ),
+                            SizedBox(height: 40,),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text("Choose Role",style: TextStyle(fontSize: 20),),
+                                Spacer(),
+                                DropdownButton(
+                                    value: myapp.dropdown,
+                                    icon: Icon(Icons.person),
+                                    underline: Container(height: 2,width: size.width,color: Colors.black,),
+                                    items: myapp.roleselection.map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? value){
+                                      myapp.dropdown=value!;
+                                      myapp.notifyListeners();
+                                    }),
+                              ],
+                            ),
+                            SizedBox(height: 40,),
+                            TextFormField(
+                              //initialValue: "Password",
+                              decoration: InputDecoration(
+                                  fillColor: const Color(0xFFD9D9D9),
+                                  filled: true,
+                                  labelText: "Password",
+                                  border: OutlineInputBorder()
+                              ),
+                              obscureText: true,
+                              onChanged: (text){
+                                myapp.passwordcontroller.text=text;
+                                myapp.notifyListeners();
+                              },
+                            ),
+                            SizedBox(height: 40,),
+                            TextFormField(
+                              //initialValue: "Password",
+                              decoration: InputDecoration(
+
+                                  fillColor: const Color(0xFFD9D9D9),
+                                  filled: true,
+                                  labelText: "Confirm Password",
+                                  border: OutlineInputBorder(),
+                              ),
+                              obscureText: true,
+                              onChanged: (text){
+                                myapp.confirmpasswordcontroller.text=text;
+                                myapp.notifyListeners();
+                              },
+                            ),
+                            SizedBox(height: 20,),
+                            Center(child: ElevatedButton(
+
+                                style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),
+                                onPressed: (){
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+                              print(myapp.namecontroller.text);
+                              print(myapp.dropdown);
+                            }, child: Text("Register",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),))),
 
 
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),

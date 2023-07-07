@@ -1,8 +1,11 @@
 import 'dart:ui';
 
+import 'package:avinyaapp/app_state.dart';
 import 'package:avinyaapp/modals/constants.dart';
+import 'package:avinyaapp/ui/StudentHomepage/student_homepage.dart';
 import 'package:avinyaapp/ui/sign_up_page.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -14,11 +17,9 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    TextEditingController namecontroller = TextEditingController();
-    //TextEditingController emailController = TextEditingController();
-    TextEditingController passwordcontroller = TextEditingController();
     Constants myConstants = Constants();
     Size size = MediaQuery.of(context).size;
+    var myapp = context.watch<ApplicationState>();
     return LayoutBuilder(
       builder: (BuildContext , BoxConstraints ) {
        return Scaffold(
@@ -85,16 +86,23 @@ class _LoginPageState extends State<LoginPage> {
                            border: OutlineInputBorder(),
 
                          ),
-                         controller: namecontroller,
+                         onChanged: (text){
+                           myapp.namecontroller.text=text;
+                           myapp.notifyListeners();
+                         },
                        ),
                        SizedBox(height: 40,),
-                       TextFormField(
+                       TextField(
+                         obscureText: true,
                          //initialValue: "Password",
                          decoration: InputDecoration(
                            labelText: "Password",
                            border: OutlineInputBorder()
                          ),
-                         controller: passwordcontroller,
+                         onChanged: (text){
+                           myapp.passwordcontroller.text=text;
+                           myapp.notifyListeners();
+                         },
                        ),
                        SizedBox(height: 20,),
                        Row(
@@ -115,7 +123,13 @@ class _LoginPageState extends State<LoginPage> {
                        ),
 
                        SizedBox(height: 20,),
-                       Center(child: ElevatedButton(onPressed: (){}, child: Text("LOGIN",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),),style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),)),
+                       Center(child: ElevatedButton(
+                         onPressed: (){
+                           print(myapp.namecontroller.text);
+                           print(myapp.passwordcontroller.text);
+                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePageStudentsMembers()));
+                         },
+                         child: Text("LOGIN",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),),style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),)),
                        SizedBox(height: 30,),
 
                      ],

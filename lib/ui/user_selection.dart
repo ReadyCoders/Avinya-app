@@ -38,7 +38,9 @@ class UserHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: myConstants.bgColor,
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        backgroundColor: myConstants.bgColor,
     body: Stack(
       clipBehavior: Clip.none,
       children: [

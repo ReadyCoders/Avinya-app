@@ -25,6 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Constants myConstants = Constants();
     Size size= MediaQuery.of(context).size;
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: myConstants.bgColor,
       body: Stack(
         clipBehavior: Clip.none,
