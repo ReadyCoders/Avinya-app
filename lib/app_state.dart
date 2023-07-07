@@ -17,7 +17,7 @@ class ApplicationState extends ChangeNotifier{
   TextEditingController confirmpasswordcontroller = TextEditingController();
   TextEditingController datecontroller = TextEditingController();
   List<String> roleselection = <String>["Student/Member","Entrepreneurs","Social Welfare"];
-  String dropdown = "Member";
+  String dropdown = "Student/Member";
 
   var selected =-1;
   var currentimportant=true;
