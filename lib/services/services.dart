@@ -16,6 +16,18 @@ class Services{
   await tasksRef.set(obj);
   print("Added");
   }
+  Future<void> addUser(Users newuser) async{
+    Map<String,dynamic> obj={
+      "UserName":newuser.Username,
+      "Emailid": newuser.emailid,
+      "Dob":newuser.Dob,
+      "role":newuser.role,
+      "id":newuser.id,
+    };
+    String docId = newuser.id;
+    final DocumentReference userref= firestore.collection("Users").doc(docId);
+    await userref.set(obj);
+  }
   Future<void> addProjectData(Projects newproject) async{
     Map<String,dynamic> obj={
       "Name": newproject.ProjectName,
@@ -52,6 +64,18 @@ class Services{
     var formattedDate= DateFormat("dd-MM-yyyy").format(now);
     final DocumentReference eventref=firestore.collection("Events").doc(id);
     await eventref.update({"isRegistered":true,"Registered Date": formattedDate});
+  }
+  Future<String> fetchRole(String mail) async{
+    String role="";
+    final snapshot=await firestore.collection("Users").get();
+    final List<DocumentSnapshot> documents = snapshot.docs;
+    for(DocumentSnapshot element in documents){
+      if((element["Emailid"]==mail)){
+        role=element["role"];
+      }
+    }
+    return role;
+
   }
   Future<List> readEvents() async{
     List<Events> events=[];

@@ -1,8 +1,12 @@
 import 'dart:ui';
 
 import 'package:avinyaapp/app_state.dart';
+import 'package:avinyaapp/modals/Classes.dart';
 import 'package:avinyaapp/modals/constants.dart';
+import 'package:avinyaapp/modals/widgets.dart';
+import 'package:avinyaapp/services/services.dart';
 import 'package:avinyaapp/ui/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -15,10 +19,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignPageState extends State<SignUpPage> {
+  var _s = Services();
   @override
   Widget build(BuildContext context) {
-
-    Constants myConstants = Constants();
     Size size = MediaQuery.of(context).size;
     return LayoutBuilder(
         builder: (BuildContext , BoxConstraints ) {
@@ -72,43 +75,18 @@ class _SignPageState extends State<SignUpPage> {
                   width: size.width*.92,
                   height: size.height*.8,
                   child: Center(
-                    child: SingleChildScrollView(
-                      child: Container(
-                        width: size.width*.8,
-                        height: size.height*.7,
+                    child: SizedBox(
+                      width: size.width*.8,
+                      height: size.height*.7,
+                      child: SingleChildScrollView(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             //Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                fillColor: const Color(0xFFD9D9D9),
-                                filled: true,
-                                labelText: "User Name",
-                                hintText: "User Name",
-                                border: OutlineInputBorder(),
-                              ),
-                              onChanged: (text){
-                                myapp.namecontroller.text=text;
-                                myapp.notifyListeners();
-                              },
-                            ),
+                            ReusableTextfields(controller: myapp.namecontroller, isPassword: false, icon: Icons.person, text: "User Name"),
                             SizedBox(height: 40,),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                fillColor: const Color(0xFFD9D9D9),
-                                filled: true,
-                                labelText: "Email id",
-                                hintText: "Email id",
-                                border: OutlineInputBorder(),
-
-                              ),
-                              onChanged: (text){
-                                myapp.emailController.text=text;
-                                myapp.notifyListeners();
-                              },
-                            ),
+                            ReusableTextfields(controller: myapp.emailController, isPassword: false, icon: Icons.message, text: "Email id"),
                             SizedBox(height: 40,),
                             TextField(
                               controller: myapp.datecontroller,
@@ -116,7 +94,9 @@ class _SignPageState extends State<SignUpPage> {
                                 fillColor: const Color(0xFFD9D9D9),
                                 filled: true,
                                 hintText: "Date Of Birth",
-                                border: OutlineInputBorder(),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(20)
+                                ),
                                 icon: Icon(Icons.calendar_today),
                               ),
                               readOnly: true,
@@ -161,44 +141,51 @@ class _SignPageState extends State<SignUpPage> {
                               ],
                             ),
                             SizedBox(height: 30,),
-                            TextFormField(
-                              //initialValue: "Password",
-                              decoration: InputDecoration(
-                                  fillColor: const Color(0xFFD9D9D9),
-                                  filled: true,
-                                  labelText: "Password",
-                                  border: OutlineInputBorder()
-                              ),
-                              obscureText: true,
-                              onChanged: (text){
-                                myapp.passwordcontroller.text=text;
-                                myapp.notifyListeners();
-                              },
-                            ),
+                            ReusableTextfields(controller: myapp.passwordcontroller, isPassword: true, icon: Icons.lock, text: "Password"),
                             SizedBox(height: 40,),
-                            TextFormField(
-                              //initialValue: "Password",
-                              decoration: InputDecoration(
-
-                                  fillColor: const Color(0xFFD9D9D9),
-                                  filled: true,
-                                  labelText: "Confirm Password",
-                                  border: OutlineInputBorder(),
-                              ),
-                              obscureText: true,
-                              onChanged: (text){
-                                myapp.confirmpasswordcontroller.text=text;
-                                myapp.notifyListeners();
-                              },
-                            ),
+                            ReusableTextfields(controller: myapp.confirmpasswordcontroller, isPassword: true, icon: Icons.lock_open, text: "Confirm Password"),
                             SizedBox(height: 20,),
                             Center(child: ElevatedButton(
 
                                 style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),
                                 onPressed: (){
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
-                              print(myapp.namecontroller.text);
-                              print(myapp.dropdown);
+                                  if(myapp.passwordcontroller.text==myapp.confirmpasswordcontroller.text && myapp.namecontroller.text!=null && myapp.datecontroller.text!=null &&
+                                  myapp.emailController.text!="" && myapp.passwordcontroller.text!="" && myapp.confirmpasswordcontroller.text!="") {
+                                    var currentuser = Users(
+                                        Username: myapp.namecontroller.text,
+                                        emailid: myapp.emailController.text,
+                                        Dob: myapp.datecontroller.text,
+                                        role: myapp.dropdown,
+                                        id: myapp.emailController.text+(myapp.passwordcontroller.text.length.toString()));
+                                    FirebaseAuth.instance
+                                        .createUserWithEmailAndPassword(
+                                        email: myapp.emailController.text,
+                                        password: myapp.passwordcontroller.text)
+                                        .then((value) {
+                                          print("Created user");
+                                      _s.addUser(currentuser);
+                                      Navigator.pushReplacement(context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoginPage()));
+                                    }).onError((error, stackTrace) {
+                                      print("Error: ${error.toString()}");
+                                    });
+                                  }
+                                  else if(myapp.passwordcontroller.text!=myapp.confirmpasswordcontroller.text){
+                                    final snackbar = SnackBar(content: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: const Text("Passwords dont match"),
+                                    ));
+                                    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                  }
+                                  else{
+                                    final snackbar = SnackBar(content: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: const Text("Please fill all the fields"),
+                                    ));
+                                    ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                  }
                             }, child: Text("Register",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),))),
 
 

@@ -224,4 +224,35 @@ class memberfeature extends StatelessWidget {
   }
 }
 
+class ReusableTextfields extends StatelessWidget {
+  const ReusableTextfields({
+    super.key,
+    required this.controller, required this.isPassword, required this.icon, required this.text,
+  });
+
+  final TextEditingController controller;
+  final bool isPassword;
+  final IconData icon;
+  final String text;
+
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      controller: controller,
+      obscureText: isPassword,
+      decoration: InputDecoration(
+        prefixIcon: Icon(icon),
+        filled: true,
+        fillColor: Colors.grey.withOpacity(.2),
+        labelText: text,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+
+      ),
+    );
+  }
+}
+
 

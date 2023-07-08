@@ -2,9 +2,13 @@ import 'dart:ui';
 
 import 'package:avinyaapp/app_state.dart';
 import 'package:avinyaapp/modals/constants.dart';
+import 'package:avinyaapp/modals/widgets.dart';
+import 'package:avinyaapp/services/services.dart';
+import 'package:avinyaapp/ui/EntrepreneursHomepage/entre_homepage.dart';
 import 'package:avinyaapp/ui/SocialHomepage/social_homepage.dart';
 import 'package:avinyaapp/ui/StudentHomepage/student_homepage.dart';
 import 'package:avinyaapp/ui/sign_up_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -16,13 +20,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  var _s= Services();
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
     Size size = MediaQuery.of(context).size;
     var myapp = context.watch<ApplicationState>();
+    var emailid=TextEditingController();
+    var pwd= TextEditingController();
     return LayoutBuilder(
       builder: (BuildContext , BoxConstraints ) {
+
        return Scaffold(
          resizeToAvoidBottomInset: false,
          backgroundColor: Color(0xeeeeeeee),
@@ -81,35 +89,18 @@ class _LoginPageState extends State<LoginPage> {
                      children: [
                        //Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
 
-                       TextFormField(
-                         decoration: InputDecoration(
-                           labelText: "Email id",
-                           border: OutlineInputBorder(),
-
-                         ),
-                         onChanged: (text){
-                           myapp.namecontroller.text=text;
-                           myapp.notifyListeners();
-                         },
-                       ),
+                       ReusableTextfields(controller: myapp.emailController,isPassword: false, icon: Icons.person_2, text: 'Email Id',),
                        SizedBox(height: 40,),
-                       TextField(
-                         obscureText: true,
-                         //initialValue: "Password",
-                         decoration: InputDecoration(
-                           labelText: "Password",
-                           border: OutlineInputBorder()
-                         ),
-                         onChanged: (text){
-                           myapp.passwordcontroller.text=text;
-                           myapp.notifyListeners();
-                         },
-                       ),
+                       ReusableTextfields(controller: myapp.passwordcontroller, isPassword: true, icon: Icons.lock, text: "Password"),
                        SizedBox(height: 20,),
                        Row(
                          mainAxisAlignment: MainAxisAlignment.end,
                          children: [
-                           TextButton(child: Text("Forgot Password",style: TextStyle(fontSize:20,color:Colors.blue,decoration: TextDecoration.underline,decorationColor: Colors.blue),), onPressed: () {  },),
+                           TextButton(child: Text("Forgot Password",
+                             style: TextStyle(fontSize:20,color:Colors.blue,decoration: TextDecoration.underline,decorationColor: Colors.blue),),
+                             onPressed: () {
+                             print(emailid.text+"\n"+pwd.text);
+                             },),
 
                          ],
                        ),
@@ -125,10 +116,39 @@ class _LoginPageState extends State<LoginPage> {
 
                        SizedBox(height: 20,),
                        Center(child: ElevatedButton(
-                         onPressed: (){
-                           print(myapp.namecontroller.text);
-                           print(myapp.passwordcontroller.text);
-                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePageStudentsMembers()));
+                         onPressed: () async{
+                           Widget? page;
+                           FirebaseAuth.instance.signInWithEmailAndPassword(email: myapp.emailController.text, password: myapp.passwordcontroller.text).then((value) async {
+                             var role = await _s.fetchRole(myapp.emailController.text) as String;
+                             switch(role){
+                               case "Student/Member":
+                                 {
+                                   setState(() {
+                                     page = HomePageStudentsMembers();
+                                   });
+                                 }
+                                 break;
+                               case "Entrepreneurs":{
+                                 setState(() {
+                                   page= HomePageEntrepreneurs();
+                                 });
+
+                               }
+                               break;
+                               case "Social Welfare":{
+                                 setState(() {
+                                   page= HomePageSocial();
+                                 });
+
+                               }
+                             }
+                             print(role);
+                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>page!));
+
+                           }).onError((error, stackTrace){
+                             print("Error: ${error.toString()}");
+                           });
+
                          },
                          child: Text("LOGIN",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),),style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),)),
                        SizedBox(height: 30,),
@@ -144,3 +164,4 @@ class _LoginPageState extends State<LoginPage> {
        );});
   }
 }
+

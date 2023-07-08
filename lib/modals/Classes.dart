@@ -26,6 +26,14 @@ class Projects{
   final String Websiteurl;
   final String id;
   Projects({required this.ProjectName, required this.Details, required this.Description, required this.ImageUrl, required this.Websiteurl,required this.id});
+}
+class Users{
+  final String Username;
+  final String emailid;
+  final String Dob;
+  final String role;
+  final String id;
 
+  Users({required this.Username, required this.emailid, required this.Dob, required this.role,required this.id});
 
 }
