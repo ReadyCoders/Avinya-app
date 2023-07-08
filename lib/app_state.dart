@@ -1,4 +1,4 @@
-import 'package:avinyaapp/modals/NewsClass.dart';
+import 'package:avinyaapp/modals/Classes.dart';
 import 'package:avinyaapp/ui/EntrepreneursHomepage/entre_homepage.dart';
 import 'package:avinyaapp/ui/SocialHomepage/social_homepage.dart';
 import 'package:avinyaapp/ui/StudentHomepage/student_homepage.dart';
@@ -18,6 +18,10 @@ class ApplicationState extends ChangeNotifier{
   TextEditingController datecontroller = TextEditingController();
   List<String> roleselection = <String>["Student/Member","Entrepreneurs","Social Welfare"];
   String dropdown = "Student/Member";
+  List<Events> OnlineEvents=[];
+  List<Events> OfflineEvents=[];
+  List<Events> allEvents=[];
+  var currentregistered=true;
 
   var selected =-1;
   var currentimportant=true;

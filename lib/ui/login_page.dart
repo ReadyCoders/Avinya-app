@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
                          onPressed: (){
                            print(myapp.namecontroller.text);
                            print(myapp.passwordcontroller.text);
-                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePageSocial()));
+                           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomePageStudentsMembers()));
                          },
                          child: Text("LOGIN",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),),style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),)),
                        SizedBox(height: 30,),

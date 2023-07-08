@@ -1,6 +1,9 @@
-import 'package:avinyaapp/modals/NewsClass.dart';
+import 'dart:ui';
+
+import 'package:avinyaapp/modals/Classes.dart';
 import 'package:avinyaapp/modals/constants.dart';
 import 'package:avinyaapp/services/services.dart';
+import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:avinyaapp/app_state.dart';
@@ -31,7 +34,7 @@ class _UserFeedState extends State<UserFeed> {
     List<News> dupNews= [];
     List<News> dupImpo=[];
     for(var element in temp){
-      if(element.isImportant){
+      if(element.isImportant==true){
         dupImpo.add(element);
       }
       dupNews.add(element);
@@ -52,10 +55,7 @@ class _UserFeedState extends State<UserFeed> {
   Widget build(BuildContext context) {
     var app2 = context.watch<ApplicationState>();
     Size size= MediaQuery.of(context).size;
-    //Map<String,dynamic> ImportantMessage={};
-    //var ImportantMessage= {"Title1":"Description1","Title2":"Description2","Title3":"Description3","Title4":"Description4","Title5":"Description5","Title6":"Description6","Title7":"Description7"};
-    //var Message= {"Title1":"Description1","Title2":"Description2","Title3":"Description3","Title4":"Description4","Title5":"Description5","Title6":"Description6","Title7":"Description7"};
-    bool ismember=true;
+    bool ismember=false;
     bool isimportant=false;
     Future<void> AddMessage(BuildContext context) async{
       var titlecontroller = TextEditingController();
@@ -107,11 +107,10 @@ class _UserFeedState extends State<UserFeed> {
                 child: const Text('Add'),
                 onPressed: () {
                   var currentNews = News(title: titlecontroller.text, desc: desccontroller.text, isImportant: app2.currentimportant,id: titlecontroller.text+desccontroller.text.length.toString());
-                  print(currentNews.title);
-                  print(currentNews.desc);
-                  print(currentNews.isImportant);
                   _s.addNews(currentNews);
                   readNews();
+                  app2.currentimportant=true;
+                  app2.notifyListeners();
                   Navigator.of(context).pop();
                 },
               ),
@@ -128,6 +127,7 @@ class _UserFeedState extends State<UserFeed> {
 
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xeeeeeeee),
       appBar: AppBar(
         leading: Padding(
@@ -178,7 +178,30 @@ class _UserFeedState extends State<UserFeed> {
       body: Stack(
         clipBehavior: Clip.none,
         children: [
-          Positioned(top:150,child: Container(height:size.height*.75,width:size.width,decoration:BoxDecoration(color: Colors.white,borderRadius: BorderRadius.only(topLeft: Radius.circular(40),topRight: Radius.circular(40))))),
+          Positioned(top:150,child: Container(
+            child:Stack(
+              children: [
+                ClipRRect(borderRadius:BorderRadius.circular(40),child: Image.asset("assets/UserBG.jpeg",height: size.height,fit: BoxFit.cover,alignment: Alignment.bottomCenter,),),
+                ImageFiltered(imageFilter: ImageFilter.blur(sigmaY: 0,sigmaX: 0),
+                    child: ShaderMask(
+                      shaderCallback: (rect) {
+                        return LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Colors.black, Colors.black.withOpacity(0)],
+                            stops: [0.5, 1]).createShader(rect);
+                      },
+                      blendMode: BlendMode.dstIn,
+                      child: Container(decoration: BoxDecoration(color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(40)))),
+                    )
+                ),
+              ],
+            ) ,
+              height:size.height*.75,
+              width:size.width,
+              decoration:BoxDecoration(
+                color: Colors.white,
+                  borderRadius: BorderRadius.only(topLeft: Radius.circular(40),topRight: Radius.circular(40))))),
           Positioned(top:size.height*0.07,child: SizedBox(width:size.width,height:150,child: Center(child: Container(
             width:size.width*.8,
             height:150,
@@ -214,7 +237,7 @@ class _UserFeedState extends State<UserFeed> {
                             ),
                             height: 50,
                             child: Center(child:
-                                Text(Message[index].title),
+                                Text(ImportantMessage[index].title),
                             ),
                           ),
                         );
@@ -255,30 +278,48 @@ class _UserFeedState extends State<UserFeed> {
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: myapp.selected==index?Colors.white:myConstants.primaryColor,
-                            borderRadius: BorderRadius.all(Radius.circular(20)),
-                            boxShadow: [
-                              BoxShadow(color: Colors.black.withOpacity(.4),blurRadius: 5,offset: Offset(0,5))
-                            ]
+                        child: DottedBorder(
+                          strokeWidth: 3,
+                          borderType: BorderType.RRect,
+                          radius: Radius.circular(20),
+                          dashPattern: [6,3,2,3],
+                          strokeCap: StrokeCap.butt,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: myapp.selected==index?Colors.white:myConstants.primaryColor,
+                              borderRadius: BorderRadius.all(Radius.circular(20)),
+                              boxShadow: [
+                                BoxShadow(color: Colors.black.withOpacity(.4),blurRadius: 5,offset: Offset(0,5))
+                              ]
 
+                            ),
+                            height: index==myapp.selected?140:80,
+                            child: Center(child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(Message[index].title,style: TextStyle(
+                                  fontSize: 24,
+                                  color: myapp.selected!=index?Colors.white:myConstants.primaryColor,
+                                  fontWeight: FontWeight.bold
+                                ),),
+                                Visibility(
+                                    visible: myapp.selected==index,
+                                    child: Column(
+                                      children: [
+                                        SizedBox(height: 30,),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text("Description:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
+                                            SizedBox(width: 30,),
+                                            Text(Message[index].desc,style: TextStyle(fontSize: 16),),
+                                          ],
+                                        ),
+                                      ],
+                                    ))
+                              ],
+                            )),
                           ),
-                          height: index==myapp.selected?140:80,
-                          child: Center(child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(Message[index].title),
-                              Visibility(
-                                  visible: myapp.selected==index,
-                                  child: Column(
-                                    children: [
-                                      SizedBox(height: 30,),
-                                      Text(Message[index].desc),
-                                    ],
-                                  ))
-                            ],
-                          )),
                         ),
                       ),
                     );
@@ -292,6 +333,7 @@ class _UserFeedState extends State<UserFeed> {
         child: FloatingActionButton(
           onPressed: (){
             AddMessage(context);
+            readNews();
 
           },
           child: Icon(Icons.add),

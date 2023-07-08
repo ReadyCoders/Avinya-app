@@ -1,4 +1,6 @@
+import 'package:avinyaapp/modals/Classes.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'constants.dart';
 
 class UserSelector extends StatelessWidget {
@@ -100,16 +102,13 @@ class Featureswidget extends StatelessWidget {
 class Startupwidget extends StatelessWidget {
   const Startupwidget({
     super.key,
-    required this.myConstants, required this.heading, required this.page, required this.Imageurl, required this.StartupsList, required this.index,
+    required this.myConstants, required this.project
 
   });
 
   final Constants myConstants;
-  final String heading;
-  final Widget page;
-  final String Imageurl;
-  final Map<String,dynamic> StartupsList;
-  final int index;
+  final Projects project;
+  //final String WebsiteUrl;
 
   Future<void> _showDetails(BuildContext context) async{
     return showDialog(context: context,
@@ -131,7 +130,7 @@ class Startupwidget extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(40)),
                             color: Colors.white
                           ),
-                          child: ClipOval(child: Image.asset(Imageurl,width: 60,)))),
+                          child: ClipOval(child: Image.asset(project.ImageUrl,width: 60,)))),
                   Positioned(
                     top: 0,
                   left: 10,
@@ -142,22 +141,29 @@ class Startupwidget extends StatelessWidget {
                       SizedBox(height: 20,),
                       Text("Name: ",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                       SizedBox(height: 10,),
-                      Row(children: [SizedBox(width: 50,),Text(StartupsList.keys.toList()[index])],),
+                      Row(children: [SizedBox(width: 50,),Text(project.ProjectName)],),
                       SizedBox(height: 10,),
                       Text("Details:",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                       SizedBox(height: 10,),
-                      Row(children: [SizedBox(width: 50,),Text(StartupsList.values.toList()[index][0])],),
+                      Row(children: [SizedBox(width: 50,),Text(project.Details)],),
                       SizedBox(height: 10,),
                       Text("Description:",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                       SizedBox(height: 10,),
-                      Row(children: [SizedBox(width: 50,),Text(StartupsList.values.toList()[index][1])],),
+                      Row(children: [SizedBox(width: 50,),Text(project.Description)],),
                     ],
                   ),
                 ),]
               ),
             ),
             actions: [
-              ElevatedButton(onPressed: (){}, child: Text("VISIT WEBSITE")),
+              ElevatedButton(onPressed: () async{
+                Uri url= Uri.parse(project.Websiteurl);
+                if(!await launchUrl(url)){
+                  throw Exception("Count launch");
+                }
+
+
+              }, child: Text("VISIT WEBSITE")),
               ElevatedButton(onPressed: (){
                 Navigator.pop(context);
               }, child: Text("CANCEL"))
@@ -180,7 +186,7 @@ class Startupwidget extends StatelessWidget {
             height: 100,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(Imageurl),
+                image: AssetImage(project.ImageUrl),
                 fit: BoxFit.cover,
               ),
               boxShadow:[BoxShadow(offset: Offset(1, 2),color: Colors.black /*myConstants.primaryColor*/,blurRadius: 5)],
@@ -189,7 +195,7 @@ class Startupwidget extends StatelessWidget {
 
           ),
           SizedBox(height: 20,),
-          Center(child: Text(heading,style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)),
+          Center(child: Text(project.ProjectName,style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)),
         ],
       ),
     );

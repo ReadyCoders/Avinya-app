@@ -1,8 +1,15 @@
+import 'dart:developer';
+import 'dart:io';
+import 'package:avinyaapp/services/services.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/news_feed.dart';
+import 'package:avinyaapp/modals/Classes.dart';
 import 'package:avinyaapp/ui/user_selection.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:avinyaapp/modals/constants.dart';
 import 'package:avinyaapp/modals/widgets.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:outlined_text/outlined_text.dart';
 
 class ProjectsPage extends StatefulWidget {
@@ -13,21 +20,143 @@ class ProjectsPage extends StatefulWidget {
 }
 
 class _ProjectsPageState extends State<ProjectsPage> {
-  Map<String,dynamic> Startups= {"Name":["Details1","Description"],"Name1":["Details1","Description"],"Name2":["Details1","Description"],"Name3":["Details1","Description"],
-    "Name4":["Details1","Description"],"Name5":["Details1","Description"],"Name6":["Details1","Description"],"Name7":["Details1","Description"],"Name8":["Details1","Description"],};
+  _ProjectsPageState(){
+    getallProjects();
+  }
+
+  bool isadmin=true;
+  List<Projects> allProjects=[];
+  Future<void> getallProjects() async{
+    List<Projects> temp = await _s.readProjects() as List<Projects>;
+    List<Projects> temp2=[];
+    for(var element in temp){
+      temp2.add(element);
+    }
+    setState(() {
+      allProjects=temp2;
+    });
+  }
+
   int selectedIndex = 0;
   void OnTapped(int index) {
     setState(() {
       selectedIndex = index;
     });
   }
+  var _s = Services();
   @override
   Widget build(BuildContext context) {
     Size size= MediaQuery.of(context).size;
     int notificationno=35;
     Constants myConstants= Constants();
+    Future<void> addproject(BuildContext context)async {
+      String imageurl="";
+      var namecontroller= TextEditingController();
+      var detailcontroller= TextEditingController();
+      var desccontroller= TextEditingController();
+      var imagecontroller= TextEditingController();
+      var websitecontroller= TextEditingController();
+      PlatformFile? pickedFile;
+      UploadTask? uploadTask;
+      Future<void> getDownloadURL() async{
+        var downloadURL = await FirebaseStorage.instance
+            .ref()
+            .child("files/${imagecontroller.text}")
+            .getDownloadURL();
+        setState(() {
+          imageurl=downloadURL.toString();
+        });
+      }
+      Future selectFile() async{
+        final result = await FilePicker.platform.pickFiles();
+        if(result==null) return;
+        setState(() {
+          pickedFile=result.files.first;
+          imagecontroller.text=pickedFile!.name;
+        });
+        final path= 'files/${pickedFile!.name}';
 
+        final file = File(pickedFile!.path!);
+
+        final ref= FirebaseStorage.instance.ref().child(path);
+
+        ref.putFile(file);
+      }
+      return showDialog(barrierDismissible:false,context: context, builder: (BuildContext context){
+        return AlertDialog(
+          title: Text("Add Project"),
+          content: StatefulBuilder(builder: (BuildContext context,StateSetter setState){
+            return SingleChildScrollView(
+            child: Column(
+              children: [
+                TextField(
+                  controller: namecontroller,
+                  decoration: InputDecoration(
+                    labelText: "Name"
+                  ),
+                ),
+                TextField(
+                  controller: detailcontroller,
+                  decoration: InputDecoration(
+                      labelText: "Details"
+                  ),
+                ),
+                TextField(
+                  controller: desccontroller,
+                  decoration: InputDecoration(
+                      labelText: "Description"
+                  ),
+                ),
+                TextField(
+                  controller: websitecontroller,
+                  decoration: InputDecoration(
+                      labelText: "WebsiteUrl"
+                  ),
+                ),
+                SizedBox(height: 20,),
+                ElevatedButton(onPressed: () async {
+                  selectFile();
+                  setState(() {
+                    imagecontroller.text=pickedFile!.name;
+                  });
+                  print(pickedFile!.name);
+                }, child: Text("Upload Images")),
+                TextField(
+                  readOnly: true,
+                  controller: imagecontroller,
+                  decoration: InputDecoration(
+                      labelText: "ImageURL"
+                  ),
+                ),
+              ],
+            ),
+            );}),
+          actions: [
+            ElevatedButton(onPressed: (){
+              getDownloadURL();
+              var currentProject = Projects(ProjectName: namecontroller.text,
+                  Details: detailcontroller.text,
+                  Description: desccontroller.text,
+                  ImageUrl: "assets/${imagecontroller.text}",
+                  Websiteurl: websitecontroller.text,
+                  id: namecontroller.text+(websitecontroller.text.length.toString()));
+              _s.addProjectData(currentProject);
+
+              getallProjects();
+              Navigator.pop(context);
+            }, child: Text("Add")),
+            ElevatedButton(onPressed: (){
+              Navigator.pop(context);
+            }, child: Text("Cancel")),
+          ],
+        );
+
+      }
+      );
+
+    }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xeeeeeeee),
       appBar: AppBar(
         leading: Padding(
@@ -119,22 +248,43 @@ class _ProjectsPageState extends State<ProjectsPage> {
               left: 20,
               child: SizedBox(
                 width: size.width*0.9,
-                height: size.height,
+                height: size.height*0.6,
                 child: GridView.count(crossAxisCount: 3,
                   shrinkWrap: true,
                   childAspectRatio: (1/1.4),
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 50,
                   children: [
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[0], page: UserFeed(),Imageurl: "assets/news.png",StartupsList: Startups,index: 0,),
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[1], page: UserSelection(),Imageurl: "assets/Mentorship.png",StartupsList: Startups,index: 1,),
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[2], page: UserSelection(),Imageurl: "assets/Projects.png",StartupsList: Startups,index: 2,),
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[3], page: UserSelection(),Imageurl: "assets/Events.png",StartupsList: Startups,index: 3,),
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[4], page: UserSelection(),Imageurl: "assets/Courses.png",StartupsList: Startups,index: 4,),
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[5], page: UserSelection(),Imageurl: "assets/Books.png",StartupsList: Startups,index: 5,),
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[6], page: UserSelection(),Imageurl: "assets/Internship.png",StartupsList: Startups,index: 6,),
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[7], page: UserSelection(),Imageurl: "assets/Gift.png",StartupsList: Startups,index: 7,),
-                    Startupwidget(myConstants: myConstants, heading: Startups.keys.toList()[8], page: UserSelection(),Imageurl: "assets/Review.png",StartupsList: Startups,index: 8,),
+                    for(int index=0;index<allProjects.length;index++)...[
+                      Startupwidget(myConstants: myConstants, project: allProjects[index])
+                    ],
+            GestureDetector(
+              onTap: (){
+                addproject(context);
+
+              },
+              child: Column(
+                children: [
+                  Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        boxShadow:[BoxShadow(offset: Offset(1, 2),color: Colors.black /*myConstants.primaryColor*/,blurRadius: 5)],
+                        color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(40))),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(child: Icon(Icons.add)),
+                        SizedBox(height: 10,),
+                        Text("Add Project",style: GoogleFonts.poppins(fontSize: 20),)
+                      ],
+                    ),
+
+                  ),
+                ],
+              ),
+            )
+
                   ],),
               ))
           /*Positioned(

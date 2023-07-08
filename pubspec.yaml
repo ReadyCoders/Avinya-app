@@ -17,6 +17,11 @@ dependencies:
   toggle_switch: ^2.1.0
   firebase_core: any
   cloud_firestore: any
+  dotted_border: any
+  google_fonts: any
+  url_launcher: any
+  file_picker: any
+  firebase_storage: any
 
 
 dev_dependencies:
