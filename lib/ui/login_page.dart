@@ -10,6 +10,8 @@ import 'package:avinyaapp/ui/StudentHomepage/student_homepage.dart';
 import 'package:avinyaapp/ui/sign_up_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -28,9 +30,10 @@ class _LoginPageState extends State<LoginPage> {
     var myapp = context.watch<ApplicationState>();
     var emailid=TextEditingController();
     var pwd= TextEditingController();
-    return LayoutBuilder(
-      builder: (BuildContext , BoxConstraints ) {
+    var pwderror=false;
 
+    return LayoutBuilder(
+      builder: (BuildContext , BoxConstraints ) {var loading = false;
        return Scaffold(
          resizeToAvoidBottomInset: false,
          backgroundColor: Color(0xeeeeeeee),
@@ -54,7 +57,7 @@ class _LoginPageState extends State<LoginPage> {
                  )
              ),
              Positioned(
-                 top: 100,left: 20,
+                 top: 80,left: 20,
                  child: Column(
                crossAxisAlignment: CrossAxisAlignment.start,
                mainAxisAlignment: MainAxisAlignment.start,
@@ -82,7 +85,7 @@ class _LoginPageState extends State<LoginPage> {
                child: Center(
                  child: Container(
                    width: size.width*.8,
-                   height: size.height*.4,
+                   height: size.height*.5,
                    child: Column(
                      mainAxisAlignment: MainAxisAlignment.start,
                      crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,15 +95,22 @@ class _LoginPageState extends State<LoginPage> {
                        ReusableTextfields(controller: myapp.emailController,isPassword: false, icon: Icons.person_2, text: 'Email Id',),
                        SizedBox(height: 40,),
                        ReusableTextfields(controller: myapp.passwordcontroller, isPassword: true, icon: Icons.lock, text: "Password"),
+                       Visibility(visible:pwderror,child: Column(
+                         children: [
+                           SizedBox(height: 20,),
+                           Text("Invalid Password",style: GoogleFonts.poppins(color: Colors.red,fontSize: 20),),
+                         ],
+                       )),
                        SizedBox(height: 20,),
                        Row(
                          mainAxisAlignment: MainAxisAlignment.end,
                          children: [
                            TextButton(child: Text("Forgot Password",
                              style: TextStyle(fontSize:20,color:Colors.blue,decoration: TextDecoration.underline,decorationColor: Colors.blue),),
-                             onPressed: () {
-                             print(emailid.text+"\n"+pwd.text);
-                             },),
+                             onPressed: (){
+
+                             },
+                           )
 
                          ],
                        ),
@@ -109,49 +119,78 @@ class _LoginPageState extends State<LoginPage> {
                          children: [
                            TextButton(child: Text("I Dont Have An Account",style: TextStyle(fontSize:20,color:Colors.blue,decoration: TextDecoration.underline,decorationColor: Colors.blue),),
                              onPressed: (){
-                               Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>SignUpPage()));
+                               Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUpPage()));
                              },)
                          ],
                        ),
 
                        SizedBox(height: 20,),
-                       Center(child: ElevatedButton(
-                         onPressed: () async{
-                           Widget? page;
-                           FirebaseAuth.instance.signInWithEmailAndPassword(email: myapp.emailController.text, password: myapp.passwordcontroller.text).then((value) async {
-                             var role = await _s.fetchRole(myapp.emailController.text) as String;
-                             switch(role){
-                               case "Student/Member":
-                                 {
-                                   setState(() {
-                                     page = HomePageStudentsMembers();
-                                   });
+                       Column(
+                         children: [
+                           Center(child: ElevatedButton(
+                             onPressed: () async{
+                               FocusScope.of(context).unfocus();
+                               setState(() {
+                                 loading=true;
+                               });
+                               Widget? page;
+                               FirebaseAuth.instance.signInWithEmailAndPassword(email: myapp.emailController.text, password: myapp.passwordcontroller.text).then((value) async {
+                                 var role = await _s.fetchRole(myapp.emailController.text) as String;
+                                 switch(role){
+                                   case "Student/Member":
+                                     {
+                                       setState(() {
+                                         page = HomePageStudentsMembers();
+                                       });
+                                     }
+                                     break;
+                                   case "Entrepreneurs":{
+                                     setState(() {
+                                       page= HomePageEntrepreneurs();
+                                     });
+
+                                   }
+                                   break;
+                                   case "Social Welfare":{
+                                     setState(() {
+                                       page= HomePageSocial();
+                                     });
+
+                                   }
                                  }
-                                 break;
-                               case "Entrepreneurs":{
                                  setState(() {
-                                   page= HomePageEntrepreneurs();
+                                   myapp.emailController.clear();
+                                   myapp.passwordcontroller.clear();
+                                   myapp.notifyListeners();
                                  });
 
-                               }
-                               break;
-                               case "Social Welfare":{
-                                 setState(() {
-                                   page= HomePageSocial();
-                                 });
+                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>page!));
 
-                               }
-                             }
-                             print(role);
-                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>page!));
+                               }).onError((error, stackTrace){
+                                 if(error.toString()=="[firebase_auth/wrong-password] The password is invalid or the user does not have a password."){
+                                   const snackbar=SnackBar(content: Center(child: Text("Credentials dont match")));
+                                   ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                 }
+                                 print("Error: ${error.toString()}");
+                               });
 
-                           }).onError((error, stackTrace){
-                             print("Error: ${error.toString()}");
-                           });
+                             },
+                             child: Text("LOGIN",
+                               style: TextStyle(fontFamily: "Open Sans",fontSize: 32),),
+                             style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),)),
+                           Visibility(
+                             visible: loading,
+                             child: Padding(
+                               padding: const EdgeInsets.all(8.0),
+                               child: SpinKitFadingCircle(
+                                 color: Colors.black,
+                                 size: 50,
 
-                         },
-                         child: Text("LOGIN",style: TextStyle(fontFamily: "Open Sans",fontSize: 32),),style: ElevatedButton.styleFrom(backgroundColor: Colors.black54,foregroundColor: Colors.white),)),
-                       SizedBox(height: 30,),
+                               ),
+                             ),
+                           ),
+                         ],
+                       ),
 
                      ],
                    ),

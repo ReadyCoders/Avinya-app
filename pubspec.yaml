@@ -23,6 +23,7 @@ dependencies:
   file_picker: any
   firebase_storage: any
   firebase_auth: any
+  flutter_spinkit: ^5.2.0
 
 
 dev_dependencies:

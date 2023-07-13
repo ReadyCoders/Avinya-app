@@ -16,10 +16,13 @@ class _HomePageSocialState extends State<HomePageSocial> {
     Size size= MediaQuery.of(context).size;
     Constants myConstants= Constants();
     return Scaffold(
-      backgroundColor: myConstants.bgColor,
+      resizeToAvoidBottomInset: false,
+        backgroundColor: Color(0xeeffffff),
       appBar: AppBar(
-        title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
+        leading: null,
+        title: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),),
         elevation: 0,
+        centerTitle: true,
         backgroundColor: myConstants.bgColor,
       ),
       body: Stack(

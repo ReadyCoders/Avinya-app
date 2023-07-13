@@ -13,8 +13,8 @@ import 'package:toggle_switch/toggle_switch.dart';
 
 
 class UserFeed extends StatefulWidget {
-  const UserFeed({Key? key}) : super(key: key);
-
+  const UserFeed({Key? key,required this.isadmin}) : super(key: key);
+  final bool isadmin;
   @override
   State<UserFeed> createState() => _UserFeedState();
 }
@@ -55,8 +55,7 @@ class _UserFeedState extends State<UserFeed> {
   Widget build(BuildContext context) {
     var app2 = context.watch<ApplicationState>();
     Size size= MediaQuery.of(context).size;
-    bool ismember=false;
-    bool isimportant=false;
+    bool ismember=widget.isadmin;
     Future<void> AddMessage(BuildContext context) async{
       var titlecontroller = TextEditingController();
       var desccontroller = TextEditingController();

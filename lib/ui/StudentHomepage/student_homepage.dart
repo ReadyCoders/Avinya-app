@@ -7,6 +7,7 @@ import 'package:avinyaapp/ui/StudentHomepage/feature/Review_page.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/events.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/news_feed.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/projects.dart';
+import 'package:avinyaapp/ui/profile_page.dart';
 import 'package:avinyaapp/ui/user_selection.dart';
 import 'package:flutter/material.dart';
 import '../../modals/constants.dart';
@@ -37,10 +38,16 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xeeffffff),
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: ClipRect(
-            child: Image.asset("assets/profile.png"),
+        leading: GestureDetector(
+          onTap: (){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
+
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: ClipRect(
+              child: Image.asset("assets/profile.png"),
+            ),
           ),
         ),
         title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
@@ -128,7 +135,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 20,
                 children: [
-                  Featureswidget(myConstants: myConstants, heading: 'NEWS FEED', page: UserFeed(),Imageurl: "assets/news.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'NEWS FEED', page: UserFeed(isadmin: false),Imageurl: "assets/news.png",),
                   Featureswidget(myConstants: myConstants, heading: 'MENTORSHIP', page: MentorsPage(),Imageurl: "assets/Mentorship.png",),
                   Featureswidget(myConstants: myConstants, heading: 'PROJECTS', page: ProjectsPage(),Imageurl: "assets/Projects.png",),
                   Featureswidget(myConstants: myConstants, heading: 'EVENTS', page: EventsPage(),Imageurl: "assets/Events.png",),

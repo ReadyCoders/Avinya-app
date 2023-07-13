@@ -22,12 +22,10 @@ class ApplicationState extends ChangeNotifier{
   List<Events> OfflineEvents=[];
   List<Events> allEvents=[];
   var currentregistered=true;
-
   var selected =-1;
   var currentimportant=true;
   Future<void> init() async{
     await Firebase.initializeApp(
-
     );
 
   }
