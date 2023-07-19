@@ -160,7 +160,7 @@ class _SignPageState extends State<SignUpPage> {
                                           emailid: myapp.emailController.text,
                                           Dob: myapp.datecontroller.text,
                                           role: myapp.dropdown,
-                                          id: myapp.emailController.text+(myapp.passwordcontroller.text.length.toString()));
+                                          id: myapp.emailController.text);
                                       FirebaseAuth.instance
                                           .createUserWithEmailAndPassword(
                                           email: myapp.emailController.text,

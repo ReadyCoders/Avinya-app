@@ -1,4 +1,5 @@
 import 'package:avinyaapp/modals/constants.dart';
+import 'package:avinyaapp/modals/widgets.dart';
 import 'package:flutter/material.dart';
 
 class ReviewPage extends StatefulWidget {
@@ -23,12 +24,7 @@ class _ReviewPageState extends State<ReviewPage> {
     return Scaffold(
       backgroundColor: Color(0xeeeeeeee),
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: ClipRect(
-            child: Image.asset("assets/profile.png"),
-          ),
-        ),
+        leading: Profileroute(),
         title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
         elevation: 0,
         backgroundColor: Color(0xdddddddd),

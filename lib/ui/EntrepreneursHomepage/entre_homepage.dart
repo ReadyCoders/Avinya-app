@@ -1,3 +1,4 @@
+import 'package:avinyaapp/modals/widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../../modals/constants.dart';
@@ -16,8 +17,9 @@ class _HomePageEntrepreneursState extends State<HomePageEntrepreneurs> {
     Constants myConstants= Constants();
     return Scaffold(
       appBar: AppBar(
-        title:
-        Center(child: Text("AVINYA")),
+        leading: Profileroute(),
+        title:Center(child: Text("AVINYA")),
+        centerTitle: true,
       ),
       body: Center(child: Text("Entrepreneurs page here")),
     );

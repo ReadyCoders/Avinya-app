@@ -26,12 +26,7 @@ class _SocialVolunteerState extends State<SocialVolunteer> {
     return Scaffold(
       backgroundColor: myConstants.bgColor,
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: ClipRect(
-            child: Image.asset("assets/profile.png"),
-          ),
-        ),
+        leading: Profileroute(),
         title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
         elevation: 0,
         backgroundColor: myConstants.bgColor,

@@ -9,7 +9,9 @@ class Services{
       "Title":newNews.title,
       "Description": newNews.desc,
       "isImportant": newNews.isImportant,
+      "DatePosted": newNews.dateposted,
       "id":newNews.id
+
     };
   String docId = newNews.id;
   final DocumentReference tasksRef=firestore.collection("News").doc(docId);
@@ -77,6 +79,19 @@ class Services{
     return role;
 
   }
+  Future<List> getprofile(String mail) async{
+    List<Profile> list=[];
+    final snapshot=await firestore.collection("Users").get();
+    final List<DocumentSnapshot> documents = snapshot.docs;
+    for(DocumentSnapshot element in documents){
+      if(element["Emailid"]==mail){
+        Profile currentProfile= Profile(Username: element["UserName"], desc:element["role"], courses: 0, books: 0, projects: 0, Dob: element["Dob"], emailid: mail);
+        list.add(currentProfile);
+      }
+    }
+  return list;
+
+  }
   Future<List> readEvents() async{
     List<Events> events=[];
     final snapshot=await firestore.collection("Events").get();
@@ -114,7 +129,7 @@ class Services{
     final snapshot=await firestore.collection("News").get();
     final List<DocumentSnapshot> documents= snapshot.docs;
     for(DocumentSnapshot element in documents){
-      news.add(News(title: element["Title"], desc: element["Description"], isImportant: element["isImportant"], id: element["id"]));
+      news.add(News(title: element["Title"], desc: element["Description"], isImportant: element["isImportant"], id: element["id"],dateposted: element["DatePosted"]));
     }
     return news;
   }

@@ -1,9 +1,15 @@
+import 'dart:developer';
+
+import 'package:avinyaapp/app_state.dart';
+import 'package:avinyaapp/modals/Classes.dart';
+import 'package:avinyaapp/services/services.dart';
 import 'package:avinyaapp/ui/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -12,20 +18,35 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  _ProfilePageState(){
+    readprofile();
+  }
+  void initstate(){
+    readprofile();
+    super.initState();
+  }
+  var profilelist =[];
   var noofCourses= 42;
   var noofBooks= 37;
   var noofProjects=23;
-  var name="Sharan Prakash";
   var details="Determined to make a change";
   var designation ="Member";
   var selected="";
   var emailid="sharanprakash2003@gmail.com";
   var dob="06-07-2003";
   List<String> dropdown= ["Edit profile","Sign Out"];
-
+  var _s = Services();
   String? selectedMenu;
+  String mail="";
+  Future<void> readprofile() async{
+    List<Profile> temp = await _s.getprofile(FirebaseAuth.instance.currentUser!.email!) as List<Profile>;
+    setState(() {
+      profilelist=temp;
+    });
+  }
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
+    var currentprofile= profilelist[0]!;
     Size size = MediaQuery.of(context).size;
     Future<void> signoutconfirm() async{
       return showDialog(
@@ -130,8 +151,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                Text(name,style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold,color: Colors.white),),
-                Text(details,style: GoogleFonts.poppins(fontSize: 24,color: Colors.white),),
+                Text(currentprofile.Username,style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold,color: Colors.white),),
+                Text(currentprofile.desc,style: GoogleFonts.poppins(fontSize: 24,color: Colors.white),),
             ],
 
           ),
@@ -151,28 +172,28 @@ class _ProfilePageState extends State<ProfilePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: size.height*0.1,),
+                    SizedBox(height: size.height*0.06,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Column(
                           children: [
-                            Text(noofCourses.toString(),style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold),),
+                            Text(currentprofile.courses.toString(),style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold),),
                             Text("Courses",style: GoogleFonts.poppins(fontSize: 24,),),
                             Text("Purchased",style: GoogleFonts.poppins(fontSize: 24,),)
                           ],
                         ),
                         Column(
                           children: [
-                            Text(noofBooks.toString(),style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold),),
+                            Text(currentprofile.books.toString(),style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold),),
                             Text("Books",style: GoogleFonts.poppins(fontSize: 24,),),
                             Text("Purchased",style: GoogleFonts.poppins(fontSize: 24,),)
                           ],
                         ),
                         Column(
                           children: [
-                            Text(noofProjects.toString(),style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold),),
+                            Text(currentprofile.projects.toString(),style: GoogleFonts.poppins(fontSize: 42,fontWeight: FontWeight.bold),),
                             Text("Projects",style: GoogleFonts.poppins(fontSize: 24,),),
                             Text("Alloted",style: GoogleFonts.poppins(fontSize: 24,),)
                           ],
@@ -180,12 +201,35 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     SizedBox(height: 40,),
-                    Text("DOB: "+dob),
-                    Text("Email id: "+emailid)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("DOB: ",style: GoogleFonts.poppins(fontSize: 24,fontWeight: FontWeight.bold),),
+                            SizedBox(height: 15,),
+                            Text("Email id: ",style: GoogleFonts.poppins(fontSize: 24,fontWeight: FontWeight.bold),),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(currentprofile.Dob,style: GoogleFonts.poppins(fontSize: 18),),
+                            SizedBox(height: 15,),
+                            Text(FirebaseAuth.instance.currentUser!.email!,style: GoogleFonts.poppins(fontSize: 18),),
+                          ],
+                        ),
+                      ],
+                    ),
+
                   ],
                 ),
 
-          ))
+          )),
+          Positioned(
+              bottom: 40,
+              child: SizedBox(width:size.width,child: Center(child: OutlinedButton(onPressed: signoutconfirm, child: Text("Sign Out",style: GoogleFonts.poppins(fontSize: 24,color: Colors.black),)))))
         ],
 
       ),

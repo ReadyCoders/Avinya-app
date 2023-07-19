@@ -2,11 +2,14 @@ import 'dart:ui';
 
 import 'package:avinyaapp/modals/Classes.dart';
 import 'package:avinyaapp/modals/constants.dart';
+import 'package:avinyaapp/modals/widgets.dart';
 import 'package:avinyaapp/services/services.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:avinyaapp/app_state.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 import 'package:outlined_text/outlined_text.dart';
 import 'package:provider/provider.dart';
 import 'package:toggle_switch/toggle_switch.dart';
@@ -23,7 +26,7 @@ class _UserFeedState extends State<UserFeed> {
   _UserFeedState(){
     readNews();
   }
-
+  var importantselected=-1;
   int notificationno=35;
   Constants myConstants= Constants();
   List<News> Message=[];
@@ -53,6 +56,8 @@ class _UserFeedState extends State<UserFeed> {
 
   @override
   Widget build(BuildContext context) {
+    var now = DateTime.now();
+    var formattedDate= DateFormat("dd-MM-yyyy").format(now);
     var app2 = context.watch<ApplicationState>();
     Size size= MediaQuery.of(context).size;
     bool ismember=widget.isadmin;
@@ -105,7 +110,7 @@ class _UserFeedState extends State<UserFeed> {
               ElevatedButton(
                 child: const Text('Add'),
                 onPressed: () {
-                  var currentNews = News(title: titlecontroller.text, desc: desccontroller.text, isImportant: app2.currentimportant,id: titlecontroller.text+desccontroller.text.length.toString());
+                  var currentNews = News(title: titlecontroller.text, desc: desccontroller.text, isImportant: app2.currentimportant,id: titlecontroller.text+desccontroller.text.length.toString(),dateposted: formattedDate);
                   _s.addNews(currentNews);
                   readNews();
                   app2.currentimportant=true;
@@ -126,15 +131,11 @@ class _UserFeedState extends State<UserFeed> {
 
     }
     return Scaffold(
+
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xeeeeeeee),
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: ClipRect(
-            child: Image.asset("assets/profile.png"),
-          ),
-        ),
+        leading: Profileroute(),
         title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
         elevation: 0,
         backgroundColor: Color(0xdddddddd),
@@ -205,7 +206,7 @@ class _UserFeedState extends State<UserFeed> {
             width:size.width*.8,
             height:150,
             decoration: BoxDecoration(
-                color: Colors.blueAccent,
+                color: myConstants.DarkBlue,
               borderRadius: BorderRadius.all(Radius.circular(30)),
               boxShadow: [
                 BoxShadow(color: myConstants.primaryColor,blurRadius: 8,offset: Offset(0,5))
@@ -223,20 +224,27 @@ class _UserFeedState extends State<UserFeed> {
                   child: ListView.builder(
                     itemCount: ImportantMessage.length,
                       itemBuilder: (BuildContext context,int index){
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.all(Radius.circular(20)),
-                                boxShadow: [
-                                  BoxShadow(color: Colors.black.withOpacity(.4),blurRadius: 5,offset: Offset(0,5))
-                                ]
+                        return GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              importantselected=index;
+                            });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                  boxShadow: [
+                                    BoxShadow(color: Colors.black,blurRadius: 5,offset: Offset(0,2))
+                                  ]
 
-                            ),
-                            height: 50,
-                            child: Center(child:
-                                Text(ImportantMessage[index].title),
+                              ),
+                              height: 50,
+                              child: Center(child:
+                                  Text(ImportantMessage[index].title,style: GoogleFonts.poppins(fontSize: 20),),
+                              ),
                             ),
                           ),
                         );
@@ -249,7 +257,7 @@ class _UserFeedState extends State<UserFeed> {
           )))),
           Positioned(top:size.width*.65,child: SizedBox(width: size.width,height: 550,child: Center(
               child: SizedBox(
-                width: size.width*.8,
+                width: size.width*.9,
                 height: 9000,
                 child:
                     Message.length==0?
@@ -264,67 +272,73 @@ class _UserFeedState extends State<UserFeed> {
                       ),
                     ):
 
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ListView.builder(
-                    itemCount: Message.length,
-                    itemBuilder: (BuildContext context,int index){
-                      var myapp = context.watch<ApplicationState>();
-                    return GestureDetector(
-                      onTap: (){
-                        (myapp.selected!=index)?myapp.selected=index:myapp.selected=-1;
-                        myapp.notifyListeners();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: DottedBorder(
-                          strokeWidth: 3,
-                          borderType: BorderType.RRect,
-                          radius: Radius.circular(20),
-                          dashPattern: [6,3,2,3],
-                          strokeCap: StrokeCap.butt,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: myapp.selected==index?Colors.white:myConstants.primaryColor,
-                              borderRadius: BorderRadius.all(Radius.circular(20)),
-                              boxShadow: [
-                                BoxShadow(color: Colors.black.withOpacity(.4),blurRadius: 5,offset: Offset(0,5))
-                              ]
+                ListView.builder(
+                  itemCount: Message.length,
+                  itemBuilder: (BuildContext context,int index){
+                    var myapp = context.watch<ApplicationState>();
+                  return GestureDetector(
+                    onTap: (){
+                      (myapp.selected!=index)?myapp.selected=index:myapp.selected=-1;
+                      myapp.notifyListeners();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(top:12,bottom: 20,left: 8,right: 8),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.all(Radius.circular(20)),
+                          boxShadow: [
+                            BoxShadow(color: index==importantselected?Colors.blueAccent:Colors.black,blurRadius: 5,offset: Offset(0,2))
+                          ]
 
+                        ),
+                        height: 100,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(height: 100,width: size.width*0.5,
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(Message[index].title,style: GoogleFonts.poppins(fontWeight: FontWeight.bold,fontSize: 24),),
+                                      const Divider(color: Colors.black,),
+                                      Text(Message[index].desc,style: GoogleFonts.poppins(fontSize: 18),)
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                            height: index==myapp.selected?140:80,
-                            child: Center(child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(Message[index].title,style: TextStyle(
-                                  fontSize: 24,
-                                  color: myapp.selected!=index?Colors.white:myConstants.primaryColor,
-                                  fontWeight: FontWeight.bold
-                                ),),
-                                Visibility(
-                                    visible: myapp.selected==index,
-                                    child: Column(
+                            SizedBox(height: 90,width: size.width*0.35,
+                              child: Center(child:
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  children: [
+                                    Text("Posted on",style: GoogleFonts.poppins(fontWeight: FontWeight.bold,fontSize: 16),),
+                                    const SizedBox(height: 20,),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
-                                        SizedBox(height: 30,),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text("Description:",style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18),),
-                                            SizedBox(width: 30,),
-                                            Text(Message[index].desc,style: TextStyle(fontSize: 16),),
-                                          ],
-                                        ),
+                                        const Icon(Icons.calendar_today),
+                                        const SizedBox(width: 10,),
+                                        Text(Message[index].dateposted,style: GoogleFonts.poppins(fontSize: 16),),
                                       ],
-                                    ))
-                              ],
-                            )),
-                          ),
+                                    )
+                                  ],
+                                ),
+                              )
+                              )),
+                          ],
                         ),
                       ),
-                    );
+                    ),
+                  );
 
-                  },),
-                )))))
+                },)))))
         ],
       ),
       floatingActionButton: Visibility(

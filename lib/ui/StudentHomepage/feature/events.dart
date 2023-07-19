@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:avinyaapp/modals/widgets.dart';
 import 'package:avinyaapp/services/services.dart';
 import 'package:avinyaapp/modals/Classes.dart';
 import 'package:flutter/material.dart';
@@ -259,12 +260,7 @@ class _EventsPageState extends State<EventsPage> {
         resizeToAvoidBottomInset: false,
         backgroundColor: const Color(0xeeeeeeee),
         appBar: AppBar(
-          leading: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: ClipRect(
-              child: Image.asset("assets/profile.png"),
-            ),
-          ),
+          leading: Profileroute(),
           title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
           elevation: 0,
           backgroundColor: const Color(0xdddddddd),

@@ -22,17 +22,20 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  bool isLoading=false;
+  bool detailsmissing=false;
+  bool wrngcreds=false;
+  bool nouser=false;
   var _s= Services();
   @override
   Widget build(BuildContext context) {
     Constants myConstants = Constants();
     Size size = MediaQuery.of(context).size;
     var myapp = context.watch<ApplicationState>();
-    var emailid=TextEditingController();
-    var pwd= TextEditingController();
     var pwderror=false;
 
     return LayoutBuilder(
+
       builder: (BuildContext , BoxConstraints ) {var loading = false;
        return Scaffold(
          resizeToAvoidBottomInset: false,
@@ -90,17 +93,67 @@ class _LoginPageState extends State<LoginPage> {
                      mainAxisAlignment: MainAxisAlignment.start,
                      crossAxisAlignment: CrossAxisAlignment.start,
                      children: [
-                       //Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
-
-                       ReusableTextfields(controller: myapp.emailController,isPassword: false, icon: Icons.person_2, text: 'Email Id',),
-                       SizedBox(height: 40,),
-                       ReusableTextfields(controller: myapp.passwordcontroller, isPassword: true, icon: Icons.lock, text: "Password"),
-                       Visibility(visible:pwderror,child: Column(
+                       Visibility(visible:detailsmissing,child: Column(
                          children: [
+                           Text("Please fill all the details",style: GoogleFonts.poppins(color: Colors.red,fontSize: 20),),
                            SizedBox(height: 20,),
-                           Text("Invalid Password",style: GoogleFonts.poppins(color: Colors.red,fontSize: 20),),
                          ],
                        )),
+                       Visibility(visible:wrngcreds,child: Column(
+                         children: [
+                           Text("The credentials dont match",style: GoogleFonts.poppins(color: Colors.red,fontSize: 20),),
+                           SizedBox(height: 20,),
+                         ],
+                       )),
+                       Visibility(visible:nouser,child: Column(
+                         children: [
+                           Text("No such user exists. Please register",style: GoogleFonts.poppins(color: Colors.red,fontSize: 20),),
+                           SizedBox(height: 20,),
+                         ],
+                       )),
+                   TextField(
+                     controller: myapp.emailController,
+                     obscureText: false,
+                     onTap: (){
+                       setState(() {
+                         detailsmissing=false;
+                         wrngcreds=false;
+                         nouser=false;
+                       });
+                     },
+                     decoration: InputDecoration(
+                       prefixIcon: Icon(Icons.person_2),
+                       filled: true,
+                       fillColor: Colors.grey.withOpacity(.2),
+                       labelText: "Email id",
+                       border: OutlineInputBorder(
+                         borderRadius: BorderRadius.circular(20),
+                       ),
+
+                     ),
+                   ),
+                       SizedBox(height: 40,),
+                       TextField(
+                         controller: myapp.passwordcontroller,
+                         obscureText: true,
+                         onTap: (){
+                           setState(() {
+                             detailsmissing=false;
+                             wrngcreds=false;
+                             nouser=false;
+                           });
+                         },
+                         decoration: InputDecoration(
+                           prefixIcon: Icon(Icons.lock),
+                           filled: true,
+                           fillColor: Colors.grey.withOpacity(.2),
+                           labelText: "Password",
+                           border: OutlineInputBorder(
+                             borderRadius: BorderRadius.circular(20),
+                           ),
+
+                         ),
+                       ),
                        SizedBox(height: 20,),
                        Row(
                          mainAxisAlignment: MainAxisAlignment.end,
@@ -127,52 +180,77 @@ class _LoginPageState extends State<LoginPage> {
                        SizedBox(height: 20,),
                        Column(
                          children: [
-                           Center(child: ElevatedButton(
+                           Center(child: isLoading ? SpinKitCircle(
+                             color: Colors.blue,
+                             size: 50.0,
+                           ):ElevatedButton(
                              onPressed: () async{
                                FocusScope.of(context).unfocus();
                                setState(() {
-                                 loading=true;
+                                 isLoading=true;
                                });
                                Widget? page;
-                               FirebaseAuth.instance.signInWithEmailAndPassword(email: myapp.emailController.text, password: myapp.passwordcontroller.text).then((value) async {
-                                 var role = await _s.fetchRole(myapp.emailController.text) as String;
-                                 switch(role){
-                                   case "Student/Member":
-                                     {
+                               if(myapp.emailController.text=="" || myapp.passwordcontroller.text==""){
+                                 print("Hello");
+                                 const snackbar= SnackBar(content: Text("Please fill all the details"));
+                                 ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                 setState(() {
+                                   detailsmissing=true;
+                                   isLoading=false;
+                                 });
+                               }
+                               else{
+                                 FirebaseAuth.instance.signInWithEmailAndPassword(email: myapp.emailController.text, password: myapp.passwordcontroller.text).then((value) async {
+                                   var role = await _s.fetchRole(myapp.emailController.text) as String;
+                                   switch(role){
+                                     case "Student/Member":
+                                       {
+                                         setState(() {
+                                           page = HomePageStudentsMembers();
+                                         });
+                                       }
+                                       break;
+                                     case "Entrepreneurs":{
                                        setState(() {
-                                         page = HomePageStudentsMembers();
+                                         page= HomePageEntrepreneurs();
                                        });
+
                                      }
                                      break;
-                                   case "Entrepreneurs":{
-                                     setState(() {
-                                       page= HomePageEntrepreneurs();
-                                     });
+                                     case "Social Welfare":{
+                                       setState(() {
+                                         page= HomePageSocial();
+                                       });
 
+                                     }
                                    }
-                                   break;
-                                   case "Social Welfare":{
-                                     setState(() {
-                                       page= HomePageSocial();
-                                     });
+                                   setState(() {
+                                     myapp.emailController.clear();
+                                     myapp.passwordcontroller.clear();
+                                     myapp.notifyListeners();
+                                   });
 
+                                   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>page!));
+
+                                 }).onError((error, stackTrace){
+                                   setState(() {
+                                     isLoading=false;
+                                   });
+                                   if(error.toString()=="[firebase_auth/wrong-password] The password is invalid or the user does not have a password."){
+                                     setState(() {
+                                       wrngcreds=true;
+                                     });
+                                     const snackbar=SnackBar(content: Center(child: Text("Credentials dont match")));
+                                     ScaffoldMessenger.of(context).showSnackBar(snackbar);
+                                   }else if(error.toString()=="[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted."){
+                                     setState(() {
+                                       nouser=true;
+                                     });
                                    }
-                                 }
-                                 setState(() {
-                                   myapp.emailController.clear();
-                                   myapp.passwordcontroller.clear();
-                                   myapp.notifyListeners();
+                                   print("Error: ${error.toString()}");
                                  });
 
-                                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>page!));
-
-                               }).onError((error, stackTrace){
-                                 if(error.toString()=="[firebase_auth/wrong-password] The password is invalid or the user does not have a password."){
-                                   const snackbar=SnackBar(content: Center(child: Text("Credentials dont match")));
-                                   ScaffoldMessenger.of(context).showSnackBar(snackbar);
-                                 }
-                                 print("Error: ${error.toString()}");
-                               });
+                               }
 
                              },
                              child: Text("LOGIN",

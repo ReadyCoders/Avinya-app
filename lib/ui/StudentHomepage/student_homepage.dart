@@ -38,18 +38,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
       resizeToAvoidBottomInset: false,
       backgroundColor: Color(0xeeffffff),
       appBar: AppBar(
-        leading: GestureDetector(
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
-
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: ClipRect(
-              child: Image.asset("assets/profile.png"),
-            ),
-          ),
-        ),
+        leading: Profileroute(),
         title: Center(child: Text("AVINYA", style: TextStyle(color: myConstants.DarkBlue,fontSize: 50),)),
         elevation: 0,
         backgroundColor: Color(0xeeeeeeee),
@@ -178,4 +167,6 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
       );
   }
 }
+
+
 

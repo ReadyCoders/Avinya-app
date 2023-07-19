@@ -1,4 +1,5 @@
 import 'package:avinyaapp/modals/Classes.dart';
+import 'package:avinyaapp/ui/profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'constants.dart';
@@ -250,6 +251,27 @@ class ReusableTextfields extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
 
+      ),
+    );
+  }
+}
+class Profileroute extends StatelessWidget {
+  const Profileroute({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async{
+        await Navigator.push(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
+
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: ClipRect(
+          child: Image.asset("assets/profile.png"),
+        ),
       ),
     );
   }
