@@ -203,6 +203,210 @@ class Startupwidget extends StatelessWidget {
   }
 }
 
+// for showing book
+class Startupbook extends StatelessWidget {
+  const Startupbook({
+    super.key,
+    required this.myConstants, required this.book
+
+  });
+
+  final Constants myConstants;
+  final Books book;
+  //final String WebsiteUrl;
+
+  Future<void> _showDetails(BuildContext context) async{
+    return showDialog(context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("About",style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),),
+            content: SizedBox(
+              height: 250,
+              child: Stack(
+                children: [
+                  Positioned(
+                      top: 0,
+                      right: 10,
+                      child: Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                            color: Colors.white
+                          ),
+                          child: ClipOval(child: Image.asset(book.imageUrl,width: 60,)))),
+                  Positioned(
+                    top: 0,
+                  left: 10,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20,),
+                      Text("Title: ",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                      SizedBox(height: 10,),
+                      Row(children: [SizedBox(width: 50,),Text(book.title)],),
+                      SizedBox(height: 10,),
+                      Text("Author:",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                      SizedBox(height: 10,),
+                      Row(children: [SizedBox(width: 50,),Text(book.author)],),
+                      SizedBox(height: 10,),
+                      Text("Description:",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                      SizedBox(height: 10,),
+                      Row(children: [SizedBox(width: 50,),Text(book.description)],),
+                    ],
+                  ),
+                ),]
+              ),
+            ),
+            actions: [
+              ElevatedButton(onPressed: () async{
+                Uri url= Uri.parse(book.websiteUrl);
+                if(!await launchUrl(url)){
+                  throw Exception("Can't launch");
+                }
+              }, child: Text("VISIT WEBSITE")),
+              ElevatedButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text("CANCEL"))
+            ],
+          );
+
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        _showDetails(context);
+      },
+      child: Column(
+        children: [
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(book.imageUrl),
+                fit: BoxFit.cover,
+              ),
+              boxShadow:[BoxShadow(offset: Offset(1, 2),color: Colors.black /*myConstants.primaryColor*/,blurRadius: 5)],
+              color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(40))),
+            //child: Center(child: Text(heading,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)),
+
+          ),
+          SizedBox(height: 20,),
+          Center(child: Text(book.title,style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)),
+        ],
+      ),
+    );
+  }
+}
+
+
+// for showing internship
+class Startupinternship extends StatelessWidget {
+  const Startupinternship({
+    super.key,
+    required this.myConstants, required this.internship
+
+  });
+
+  final Constants myConstants;
+  final Internship internship;
+  //final String WebsiteUrl;
+
+  Future<void> _showDetails(BuildContext context) async{
+    return showDialog(context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text("About",style: TextStyle(fontSize: 32,fontWeight: FontWeight.bold),),
+            content: SizedBox(
+              height: 250,
+              child: Stack(
+                children: [
+                  Positioned(
+                      top: 0,
+                      right: 10,
+                      child: Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(40)),
+                            color: Colors.white
+                          ),
+                          child: ClipOval(child: Image.asset(internship.imageUrl,width: 60,)))),
+                  Positioned(
+                    top: 0,
+                  left: 10,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 20,),
+                      Text("Company Name: ",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                      SizedBox(height: 10,),
+                      Row(children: [SizedBox(width: 50,),Text(internship.name)],),
+                      SizedBox(height: 10,),
+                      Text("Job_Type:",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                      SizedBox(height: 10,),
+                      Row(children: [SizedBox(width: 50,),Text(internship.job_type)],),
+                      SizedBox(height: 10,),
+                      Text("Description:",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
+                      SizedBox(height: 10,),
+                      Row(children: [SizedBox(width: 50,),Text(internship.description)],),
+                    ],
+                  ),
+                ),]
+              ),
+            ),
+            actions: [
+              ElevatedButton(onPressed: () async{
+                Uri url= Uri.parse(internship.websiteUrl);
+                if(!await launchUrl(url)){
+                  throw Exception("Can't launch");
+                }
+              }, child: Text("VISIT WEBSITE")),
+              ElevatedButton(onPressed: (){
+                Navigator.pop(context);
+              }, child: Text("CANCEL"))
+            ],
+          );
+
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (){
+        _showDetails(context);
+      },
+      child: Column(
+        children: [
+          Container(
+            width: 100,
+            height: 100,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(internship.imageUrl),
+                fit: BoxFit.cover,
+              ),
+              boxShadow:[BoxShadow(offset: Offset(1, 2),color: Colors.black /*myConstants.primaryColor*/,blurRadius: 5)],
+              color: Colors.white,borderRadius: BorderRadius.all(Radius.circular(40))),
+            //child: Center(child: Text(heading,style: TextStyle(fontSize: 15,fontWeight: FontWeight.bold),)),
+
+          ),
+          SizedBox(height: 20,),
+          Center(child: Text(internship.name,style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)),
+        ],
+      ),
+    );
+  }
+} 
 
 class memberfeature extends StatelessWidget {
   const memberfeature({
