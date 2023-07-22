@@ -18,6 +18,28 @@ class Events{
   Events({required this.EventName, required this.Details, required this.isonline, required this.lastdate, required this.registereddate, required this.registered, required this.id});
 
 }
+
+class Books{
+  Books({required this.title, required this.author,required this.description, required this.imageUrl, required this.websiteUrl, required this.id});
+  final String title;
+  final String author;
+  final String description;
+  final String imageUrl;
+  final String websiteUrl;
+  final String id;
+}
+
+
+class Internship{
+  Internship({required this.name, required this.job_type,required this.description, required this.imageUrl, required this.websiteUrl, required this.id});
+  final String name;
+  final String job_type;
+  final String description;
+  final String imageUrl;
+  final String websiteUrl;
+  final String id;
+}
+
 class Profile{
   final String Username;
   final String desc;
