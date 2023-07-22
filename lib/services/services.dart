@@ -133,4 +133,72 @@ class Services{
     }
     return news;
   }
+
+
+  Future<void> addBookData(Books newbook) async{
+    Map<String,dynamic> obj={
+      "title": newbook.title,
+      "author": newbook.author,
+      "description": newbook.description,
+      "imageURL": newbook.imageUrl,
+      "websiteUrl":newbook.websiteUrl,
+      "id": newbook.id
+    };
+    
+    String docId = newbook.id;
+    final DocumentReference eventsRef=firestore.collection("Books").doc(docId);
+    await eventsRef.set(obj);
+    print("Added Book");
+  }
+
+  Future<void> addInternData(Internship newintern) async{
+    Map<String,dynamic> obj={
+      "name": newintern.name,
+      "job_type": newintern.job_type,
+      "description": newintern.description,
+      "imageURL": newintern.imageUrl,
+      "websiteUrl":newintern.websiteUrl,
+      "id": newintern.id
+    };
+    
+    String docId = newintern.id;
+    final DocumentReference eventsRef=firestore.collection("Internship").doc(docId);
+    await eventsRef.set(obj);
+    print("Added Internship");
+  }
+
+  Future<List> readBooks() async{
+    List<Books> books=[];
+    final snapshot=await firestore.collection("Books").get();
+    final List<DocumentSnapshot> documents = snapshot.docs;
+    for(DocumentSnapshot element in documents){
+      books.add(
+          Books(
+          title: element["title"],
+          author: element["author"],
+          description: element["description"],
+          imageUrl: element["imageURL"],
+          websiteUrl: element["websiteUrl"],
+          id: element["id"]));
+    }
+    return books;
+  }
+
+  Future<List> readInternship() async{
+    List<Internship> internship=[];
+    final snapshot=await firestore.collection("Internship").get();
+    final List<DocumentSnapshot> documents = snapshot.docs;
+    for(DocumentSnapshot element in documents){
+      internship.add(
+          Internship(
+          name: element["name"],
+          job_type: element["job_type"],
+          description: element["description"],
+          imageUrl: element["imageURL"],
+          websiteUrl: element["websiteUrl"],
+          id: element["id"]));
+    }
+    return internship;
+  }
+
 }
