@@ -246,7 +246,7 @@ class _ProjectsPageState extends State<ProjectsPage> {
                 height: size.height*0.6,
                 child: GridView.count(crossAxisCount: 3,
                   shrinkWrap: true,
-                  childAspectRatio: (1/1.4),
+                  childAspectRatio: (1/1.6),
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 50,
                   children: [

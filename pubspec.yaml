@@ -24,6 +24,8 @@ dependencies:
   firebase_storage: any
   firebase_auth: any
   flutter_spinkit: ^5.2.0
+  marquee: any
+  flutter_pdfview: any
 
 
 dev_dependencies:

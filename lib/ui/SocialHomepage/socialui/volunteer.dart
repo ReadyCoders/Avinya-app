@@ -108,12 +108,12 @@ class _SocialVolunteerState extends State<SocialVolunteer> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 100,
                   children: [
-                    Featureswidget(myConstants: myConstants, heading: 'News Feed', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
-                    Featureswidget(myConstants: myConstants, heading: 'Event List', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
-                    Featureswidget(myConstants: myConstants, heading: 'My Zone ', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
-                    Featureswidget(myConstants: myConstants, heading: 'Meeting', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
-                    Featureswidget(myConstants: myConstants, heading: 'Raising Fund', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
-                    Featureswidget(myConstants: myConstants, heading: 'Best Performer', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
+                    Featureswidget(myConstants: myConstants, heading: 'News Feed', page: UserSelection(),Imageurl: "assets/Internship.jpeg",premiummatter: false,),
+                    Featureswidget(myConstants: myConstants, heading: 'Event List', page: UserSelection(),Imageurl: "assets/Internship.jpeg",premiummatter: false,),
+                    Featureswidget(myConstants: myConstants, heading: 'My Zone ', page: UserSelection(),Imageurl: "assets/Internship.jpeg",premiummatter: false,),
+                    Featureswidget(myConstants: myConstants, heading: 'Meeting', page: UserSelection(),Imageurl: "assets/Internship.jpeg",premiummatter: false,),
+                    Featureswidget(myConstants: myConstants, heading: 'Raising Fund', page: UserSelection(),Imageurl: "assets/Internship.jpeg",premiummatter: false,),
+                    Featureswidget(myConstants: myConstants, heading: 'Best Performer', page: UserSelection(),Imageurl: "assets/Internship.jpeg",premiummatter: false,),
                   ],),
           ))
         ],

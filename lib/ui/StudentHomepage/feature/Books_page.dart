@@ -270,7 +270,7 @@ class _BooksPageState extends State<BooksPage> {
                 height: size.height*0.6,
                 child: GridView.count(crossAxisCount: 3,
                   shrinkWrap: true,
-                  childAspectRatio: (1/1.4),
+                  childAspectRatio: (1/1.7),
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 50,
                   children: [

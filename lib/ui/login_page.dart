@@ -6,6 +6,7 @@ import 'package:avinyaapp/modals/widgets.dart';
 import 'package:avinyaapp/services/services.dart';
 import 'package:avinyaapp/ui/EntrepreneursHomepage/entre_homepage.dart';
 import 'package:avinyaapp/ui/SocialHomepage/social_homepage.dart';
+import 'package:avinyaapp/ui/SocialHomepage/socialui/adminsocial.dart';
 import 'package:avinyaapp/ui/StudentHomepage/student_homepage.dart';
 import 'package:avinyaapp/ui/sign_up_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,6 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   bool detailsmissing=false;
   bool wrngcreds=false;
   bool nouser=false;
+  bool bademail=false;
   var _s= Services();
   @override
   Widget build(BuildContext context) {
@@ -111,6 +113,12 @@ class _LoginPageState extends State<LoginPage> {
                            SizedBox(height: 20,),
                          ],
                        )),
+                       Visibility(visible:bademail,child: Column(
+                         children: [
+                           Text("Please enter a valid email",style: GoogleFonts.poppins(color: Colors.red,fontSize: 20),),
+                           SizedBox(height: 20,),
+                         ],
+                       )),
                    TextField(
                      controller: myapp.emailController,
                      obscureText: false,
@@ -119,6 +127,7 @@ class _LoginPageState extends State<LoginPage> {
                          detailsmissing=false;
                          wrngcreds=false;
                          nouser=false;
+                         bademail=false;
                        });
                      },
                      decoration: InputDecoration(
@@ -219,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                                      break;
                                      case "Social Welfare":{
                                        setState(() {
-                                         page= HomePageSocial();
+                                         page= SocialAdmin();
                                        });
 
                                      }
@@ -245,6 +254,10 @@ class _LoginPageState extends State<LoginPage> {
                                    }else if(error.toString()=="[firebase_auth/user-not-found] There is no user record corresponding to this identifier. The user may have been deleted."){
                                      setState(() {
                                        nouser=true;
+                                     });
+                                   }else if(error.toString()=="[firebase_auth/invalid-email] The email address is badly formatted."){
+                                     setState(() {
+                                       bademail=true;
                                      });
                                    }
                                    print("Error: ${error.toString()}");

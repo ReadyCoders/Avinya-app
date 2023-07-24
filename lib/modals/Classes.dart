@@ -48,8 +48,9 @@ class Profile{
   final int projects;
   final String Dob;
   final String emailid;
+  final bool premium;
   Profile(
-  {required this.Username,required this.desc,required this.courses, required this.books, required this.projects, required this.Dob, required this.emailid,}
+  {required this.Username,required this.desc,required this.courses, required this.books, required this.projects, required this.Dob, required this.emailid,required this.premium}
       );
 }
 class Projects{
@@ -67,7 +68,8 @@ class Users{
   final String Dob;
   final String role;
   final String id;
+  final bool premium;
 
-  Users({required this.Username, required this.emailid, required this.Dob, required this.role,required this.id});
+  Users({required this.Username, required this.emailid, required this.Dob, required this.role,required this.id,required this.premium});
 
 }

@@ -1,5 +1,6 @@
 import 'package:avinyaapp/modals/Classes.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 class Services{
@@ -85,7 +86,7 @@ class Services{
     final List<DocumentSnapshot> documents = snapshot.docs;
     for(DocumentSnapshot element in documents){
       if(element["Emailid"]==mail){
-        Profile currentProfile= Profile(Username: element["UserName"], desc:element["role"], courses: 0, books: 0, projects: 0, Dob: element["Dob"], emailid: mail);
+        Profile currentProfile= Profile(Username: element["UserName"], desc:element["role"], courses: 0, books: 0, projects: 0, Dob: element["Dob"], emailid: mail, premium: element["premium"]);
         list.add(currentProfile);
       }
     }
@@ -122,8 +123,44 @@ class Services{
     }
     return projects;
   }
-
-
+  Future<bool> validatePremium(String code) async{
+    var profileemail;
+    FirebaseAuth.instance.userChanges().listen((user) {
+      if(user!=null){
+        profileemail=FirebaseAuth.instance.currentUser!.email!;
+      }
+    });
+    List codes=[];
+    final snapshot = await firestore.collection("PremiumCodes").get();
+    final List<DocumentSnapshot> documents = snapshot.docs;
+    codes = documents[0]["codeid"];
+    if(codes.contains(code)){
+      final DocumentReference eventref=firestore.collection("Users").doc(profileemail);
+      await eventref.update({"premium":true});
+      print("Exists");
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+  Future<bool> ispremium() async{
+    bool prem=false;
+    var profileemail;
+    FirebaseAuth.instance.userChanges().listen((user) {
+      if(user!=null){
+        profileemail=FirebaseAuth.instance.currentUser!.email!;
+      }
+    });
+    final snapshot = await firestore.collection("Users").get();
+    final List<DocumentSnapshot> documents = snapshot.docs;
+    for(DocumentSnapshot element in documents){
+      if(element["Emailid"]==profileemail){
+        prem=element["premium"];
+      }
+    }
+    return prem;
+  }
   Future<List> read() async{
     List<News>news=[];
     final snapshot=await firestore.collection("News").get();
@@ -133,6 +170,27 @@ class Services{
     }
     return news;
   }
+  Future<List> getallCodes() async{
+    List codes=[];
+    final snapshot= await firestore.collection("PremiumCodes").get();
+    final List<DocumentSnapshot> documents= snapshot.docs;
+    codes = documents[0]["codeid"];
+    return codes;
+  }
+  Future<void> addcode(String newcode) async{
+    List codes=[];
+    final snapshot= await firestore.collection("PremiumCodes").get();
+    final List<DocumentSnapshot> documents= snapshot.docs;
+    codes = documents[0]["codeid"];
+    codes.add(newcode);
+    final DocumentReference eventref=firestore.collection("Premium").doc("codes");
+    Map<String,dynamic> obj={
+      "codeid":codes
+    };
+    eventref.update({"codeid": codes});
+
+  }
+
 
 
   Future<void> addBookData(Books newbook) async{
@@ -144,7 +202,7 @@ class Services{
       "websiteUrl":newbook.websiteUrl,
       "id": newbook.id
     };
-    
+
     String docId = newbook.id;
     final DocumentReference eventsRef=firestore.collection("Books").doc(docId);
     await eventsRef.set(obj);
@@ -160,7 +218,7 @@ class Services{
       "websiteUrl":newintern.websiteUrl,
       "id": newintern.id
     };
-    
+
     String docId = newintern.id;
     final DocumentReference eventsRef=firestore.collection("Internship").doc(docId);
     await eventsRef.set(obj);

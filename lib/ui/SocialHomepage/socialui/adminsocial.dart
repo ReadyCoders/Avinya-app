@@ -1,10 +1,13 @@
 import 'package:avinyaapp/modals/constants.dart';
 import 'package:avinyaapp/modals/widgets.dart';
+import 'package:avinyaapp/ui/SocialHomepage/socialui/Settings%20page.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/Books_page.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/events.dart';
 import 'package:avinyaapp/ui/StudentHomepage/feature/news_feed.dart';
 import 'package:avinyaapp/ui/user_selection.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:marquee/marquee.dart';
 
 class SocialAdmin extends StatefulWidget {
   const SocialAdmin({Key? key}) : super(key: key);
@@ -100,12 +103,30 @@ class _SocialAdminState extends State<SocialAdmin> {
                 height: 100,
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
-                child: const Center(child: Text("BANNER HERE")),
+                child: Center(child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Marquee(
+                    text: "Technology was the key to my freedom.",
+                    style: GoogleFonts.poppins(fontSize: 24),
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    blankSpace: 100.0,
+                    velocity: 30.0,
+                    startPadding: 50.0,
+
+                  ),
+                )
+
+                ),
 
 
               )),
+          Positioned(
+              top:70,left:20,child: Image.asset("assets/Quotes1.png",width: 60,)),
+          Positioned(
+              top: 130,right: 20,
+              child: Image.asset("assets/Quotes2.png",width: 60,)),
           Positioned(
               top: 250,
               left: 20,
@@ -118,13 +139,10 @@ class _SocialAdminState extends State<SocialAdmin> {
                   crossAxisSpacing: 10,
                   mainAxisSpacing: 50,
                   children: [
-                    Featureswidget(myConstants: myConstants, heading: 'News Feed', page: UserFeed(isadmin: true),Imageurl: "assets/news.png",),
-                    Featureswidget(myConstants: myConstants, heading: "Books", page: BooksPage(), Imageurl: "assets/Books.png"),
-                    Featureswidget(myConstants: myConstants, heading: 'Event List', page: EventsPage(),Imageurl: "assets/Events.png",),
-                    Featureswidget(myConstants: myConstants, heading: 'My Zone ', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
-                    Featureswidget(myConstants: myConstants, heading: 'Meeting', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
-                    Featureswidget(myConstants: myConstants, heading: 'Raising Fund', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
-                    Featureswidget(myConstants: myConstants, heading: 'Best Performer', page: UserSelection(),Imageurl: "assets/Internship.jpeg",),
+                    Featureswidget(myConstants: myConstants, heading: 'News Feed', page: UserFeed(isadmin: true),Imageurl: "assets/news.png",premiummatter: false,),
+                    Featureswidget(myConstants: myConstants, heading: "Books", page: BooksPage(isadmin: true,), Imageurl: "assets/Books.png",premiummatter: false,),
+                    Featureswidget(myConstants: myConstants, heading: 'Event List', page: EventsPage(),Imageurl: "assets/Events.png",premiummatter: false,),
+                    Featureswidget(myConstants: myConstants, heading: 'Admin Features', page: AdminSettingsPage(),Imageurl: "assets/Setting.png",premiummatter: false,),
                   ],),
               ))
         ],

@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:avinyaapp/app_state.dart';
 import 'package:avinyaapp/modals/Classes.dart';
 import 'package:avinyaapp/services/services.dart';
+import 'package:avinyaapp/ui/StudentHomepage/student_homepage.dart';
 import 'package:avinyaapp/ui/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -10,6 +11,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -25,7 +27,7 @@ class _ProfilePageState extends State<ProfilePage> {
     readprofile();
     super.initState();
   }
-  var profilelist =[];
+  var profilelist =[Profile(Username: "Loading", desc: "Loading", courses: 0, books: 0, projects: 0, Dob: "Loading", emailid: "Loading", premium: false)];
   var noofCourses= 42;
   var noofBooks= 37;
   var noofProjects=23;
@@ -48,6 +50,93 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context){
     var currentprofile= profilelist[0]!;
     Size size = MediaQuery.of(context).size;
+
+    Future<void> buypremium() async{
+      return showDialog(
+          context: context, builder: (BuildContext context){
+        Size size1= MediaQuery.of(context).size;
+        var myapp = context.watch<ApplicationState>();
+        return Center(
+          child: AlertDialog(
+            title: Text("Set Premium"),
+            content: Container(
+              width: size1.width*0.8,
+              height: size1.height*0.4,
+              child: StatefulBuilder(builder: (BuildContext context,StateSetter setState) {
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: 40,),
+                      Text("I already have a code",
+                        style: GoogleFonts.poppins(color: Colors.black),),
+                      SizedBox(height: 20,),
+                      TextField(
+                        controller: myapp.codecontroller,
+                        decoration: InputDecoration(
+                            labelText: "Enter Code",
+                            border: OutlineInputBorder()
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Visibility(
+                          visible: myapp.nocode,
+                          child: Column(
+                            children: [
+                              Text("Code doesnt exist",
+                                style: GoogleFonts.poppins(color: Colors.red),),
+                              SizedBox(height: 20,),
+                            ],
+                          )),
+                      OutlinedButton(onPressed: () async {
+                        FocusManager.instance.primaryFocus?.unfocus();
+                        bool flag = await _s.validatePremium(
+                            myapp.codecontroller.text) as bool;
+                        if (flag) {
+                          Navigator.pushReplacement(context, MaterialPageRoute(
+                              builder: (context) => HomePageStudentsMembers()));
+                        }
+                        else {
+                          myapp.nocode = true;
+                          myapp.notifyListeners();
+                        }
+                        myapp.codecontroller.clear();
+                        myapp.notifyListeners();
+                        print(myapp.nocode.toString());
+                      }, child: Text("Validate")),
+                      SizedBox(height: 30,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          SizedBox(width: size1.width * 0.3,
+                              height: 8,
+                              child: Divider(height: 8, color: Colors.black,)),
+                          Text("OR"),
+                          SizedBox(width: size1.width * 0.3,
+                              height: 8,
+                              child: Divider(color: Colors.black,)),
+                        ],
+                      ),
+                      SizedBox(height: 30,),
+                      OutlinedButton(
+                          onPressed: () async {
+                            Uri url= Uri.parse("https://avinyabharat.com/index.php/membership/");
+                            if(!await launchUrl(url)){
+                            throw Exception("Count launch");
+                            }
+                          }, child: Text("Buy Premium")),
+                      SizedBox(height: 20,)
+
+                    ],
+                  ),
+                );
+              }),
+            ),
+          ),
+        );
+      });
+    }
+
+
     Future<void> signoutconfirm() async{
       return showDialog(
           barrierDismissible: false,
@@ -227,6 +316,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
 
           )),
+          Positioned(
+              bottom: currentprofile.premium?100:90,
+              child: currentprofile.premium?
+
+              SizedBox(width:size.width,child: Center(child: Container(decoration:BoxDecoration(border: Border.all(width: 2),borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("You are already a premium user",style: GoogleFonts.poppins(fontSize: 24,),),
+                  )))):
+
+              Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(width:size.width,child: Center(child: OutlinedButton(onPressed: buypremium, child: Text("Get Premium",style: GoogleFonts.poppins(fontSize: 24,color: Colors.black),)))),
+                  ))
+,
           Positioned(
               bottom: 40,
               child: SizedBox(width:size.width,child: Center(child: OutlinedButton(onPressed: signoutconfirm, child: Text("Sign Out",style: GoogleFonts.poppins(fontSize: 24,color: Colors.black),)))))

@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:avinyaapp/modals/Classes.dart';
+import 'package:avinyaapp/services/services.dart';
 import 'package:avinyaapp/ui/profile_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'constants.dart';
 
@@ -54,7 +58,7 @@ class UserSelector extends StatelessWidget {
 class Featureswidget extends StatelessWidget {
   const Featureswidget({
     super.key,
-    required this.myConstants, required this.heading, required this.page, required this.Imageurl,
+    required this.myConstants, required this.heading, required this.page, required this.Imageurl,required this.premiummatter
 
   });
 
@@ -62,13 +66,45 @@ class Featureswidget extends StatelessWidget {
   final String heading;
   final Widget page;
   final String Imageurl;
+  final bool premiummatter;
 
 
   @override
   Widget build(BuildContext context) {
+    Services _s=Services();
+    Future<void> alertpremium() async {
+      return showDialog(
+          barrierDismissible: false,
+          context: context, builder: (BuildContext){
+        return AlertDialog(
+          title: Text("Only Premium Users can access"),
+          content: Text("Do you wanna be redirected to your profile page?"),
+          actions: [
+            OutlinedButton(onPressed: ()async {
+              await Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>ProfilePage()));
+            }, child: Text("Yes")),
+            OutlinedButton(onPressed: (){
+              Navigator.pop(context);
+            }, child: Text("No")),
+          ],
+        );
+      });
+    }
     return GestureDetector(
-      onTap: (){
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>page));
+      onTap: () async {
+        if(premiummatter){
+          var premm= await _s.ispremium() as bool;
+          if(premm){
+            Navigator.push(context, MaterialPageRoute(builder: (context)=>page));
+          }
+          else{
+            alertpremium();
+          }
+        }
+        else{
+
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>page));
+        }
       },
       child: Container(decoration: BoxDecoration(
           boxShadow:[BoxShadow(offset: Offset(1, 2),color: Colors.black /*myConstants.primaryColor*/,blurRadius: 5)],
@@ -110,7 +146,6 @@ class Startupwidget extends StatelessWidget {
   final Constants myConstants;
   final Projects project;
   //final String WebsiteUrl;
-
   Future<void> _showDetails(BuildContext context) async{
     return showDialog(context: context,
         barrierDismissible: false,
@@ -184,7 +219,7 @@ class Startupwidget extends StatelessWidget {
         children: [
           Container(
             width: 100,
-            height: 100,
+            height: 120,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(project.ImageUrl),
@@ -204,7 +239,7 @@ class Startupwidget extends StatelessWidget {
 }
 
 // for showing book
-class Startupbook extends StatelessWidget {
+class Startupbook extends StatefulWidget {
   const Startupbook({
     super.key,
     required this.myConstants, required this.book
@@ -213,7 +248,55 @@ class Startupbook extends StatelessWidget {
 
   final Constants myConstants;
   final Books book;
+
+  @override
+  State<Startupbook> createState() => _StartupbookState();
+}
+
+class _StartupbookState extends State<Startupbook> {
+  final Completer<PDFViewController> _controller =
+  Completer<PDFViewController>();
+  int? pages = 0;
+  int? currentPage = 0;
+  bool isReady = false;
+  String errorMessage = '';
+
   //final String WebsiteUrl;
+  Future<void> _showbook(BuildContext context) async{
+    return showDialog(context: context, builder: (BuildContext context){
+      Size size = MediaQuery.of(context).size;
+      return Container(
+        color: Colors.white,
+        height: size.height*0.8,
+        width: size.height*0.8,
+        child: PDFView(
+          filePath: "assets/Concepts of Physics Volume 1.pdf",
+          enableSwipe: true,
+          swipeHorizontal: true,
+          autoSpacing: false,
+          pageFling: false,
+          onRender: (_pages) {
+            setState(() {
+              pages = _pages;
+              isReady = true;
+            });
+          },
+          onError: (error) {
+            print(error.toString());
+          },
+          onPageError: (page, error) {
+            print('$page: ${error.toString()}');
+          },
+          onViewCreated: (PDFViewController pdfViewController) {
+            _controller.complete(pdfViewController);
+          },
+          onPageChanged: (int? page, int? total) {
+            print('page change: $page/$total');
+          },
+        ),
+      );
+    });
+  }
 
   Future<void> _showDetails(BuildContext context) async{
     return showDialog(context: context,
@@ -235,7 +318,7 @@ class Startupbook extends StatelessWidget {
                             borderRadius: BorderRadius.all(Radius.circular(40)),
                             color: Colors.white
                           ),
-                          child: ClipOval(child: Image.asset(book.imageUrl,width: 60,)))),
+                          child: ClipOval(child: Image.asset(widget.book.imageUrl,width: 60,)))),
                   Positioned(
                     top: 0,
                   left: 10,
@@ -246,15 +329,15 @@ class Startupbook extends StatelessWidget {
                       SizedBox(height: 20,),
                       Text("Title: ",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                       SizedBox(height: 10,),
-                      Row(children: [SizedBox(width: 50,),Text(book.title)],),
+                      Row(children: [SizedBox(width: 50,),Text(widget.book.title)],),
                       SizedBox(height: 10,),
                       Text("Author:",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                       SizedBox(height: 10,),
-                      Row(children: [SizedBox(width: 50,),Text(book.author)],),
+                      Row(children: [SizedBox(width: 50,),Text(widget.book.author)],),
                       SizedBox(height: 10,),
                       Text("Description:",style: TextStyle(fontSize: 22,fontWeight: FontWeight.bold),),
                       SizedBox(height: 10,),
-                      Row(children: [SizedBox(width: 50,),Text(book.description)],),
+                      Row(children: [SizedBox(width: 50,),Text(widget.book.description)],),
                     ],
                   ),
                 ),]
@@ -262,11 +345,13 @@ class Startupbook extends StatelessWidget {
             ),
             actions: [
               ElevatedButton(onPressed: () async{
-                Uri url= Uri.parse(book.websiteUrl);
+                Uri url= Uri.parse(widget.book.websiteUrl);
                 if(!await launchUrl(url)){
                   throw Exception("Can't launch");
                 }
-              }, child: Text("VISIT WEBSITE")),
+                Navigator.pop(context);
+                //_showbook(context);
+              }, child: Text("READ BOOK")),
               ElevatedButton(onPressed: (){
                 Navigator.pop(context);
               }, child: Text("CANCEL"))
@@ -289,7 +374,7 @@ class Startupbook extends StatelessWidget {
             height: 100,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(book.imageUrl),
+                image: AssetImage(widget.book.imageUrl),
                 fit: BoxFit.cover,
               ),
               boxShadow:[BoxShadow(offset: Offset(1, 2),color: Colors.black /*myConstants.primaryColor*/,blurRadius: 5)],
@@ -298,7 +383,7 @@ class Startupbook extends StatelessWidget {
 
           ),
           SizedBox(height: 20,),
-          Center(child: Text(book.title,style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)),
+          Center(child: Text(widget.book.title,style: TextStyle(color:Colors.white,fontSize: 25,fontWeight: FontWeight.bold),)),
         ],
       ),
     );

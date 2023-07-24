@@ -10,6 +10,9 @@ import 'package:avinyaapp/ui/StudentHomepage/feature/projects.dart';
 import 'package:avinyaapp/ui/profile_page.dart';
 import 'package:avinyaapp/ui/user_selection.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:marquee/marquee.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../modals/constants.dart';
 import '../../modals/widgets.dart';
 
@@ -23,10 +26,16 @@ class HomePageStudentsMembers extends StatefulWidget {
 class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
 
   int selectedIndex = 0;
-  void OnTapped(int index) {
+  Future<void> OnTapped(int index) async {
     setState(() {
       selectedIndex = index;
     });
+    if(index==2){
+      Uri url= Uri.parse("https://meet.google.com/");
+      if(!await launchUrl(url,mode: LaunchMode.externalApplication)){
+    throw Exception("Count launch");
+    }
+    }
   }
   @override
   Widget build(BuildContext context) {
@@ -98,6 +107,7 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
             ),
 
           )),
+
           Positioned(
               top:15,
               left: 20,
@@ -108,10 +118,28 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
                   color: Colors.white,
                   borderRadius: BorderRadius.all(Radius.circular(20)),
                 ),
-                child: const Center(child: Text("BANNER HERE")),
+                child: Center(child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Marquee(
+                      text: "Technology was the key to my freedom.",
+                    style: GoogleFonts.poppins(fontSize: 24),
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    blankSpace: 100.0,
+                    velocity: 30.0,
+                    startPadding: 50.0,
+
+                  ),
+                )
+
+                ),
 
 
               )),
+          Positioned(
+              top:20,left:20,child: Image.asset("assets/Quotes1.png",width: 60,)),
+          Positioned(
+              top: 70,right: 20,
+              child: Image.asset("assets/Quotes2.png",width: 60,)),
           Positioned(
               top: 175,
               left: 20,
@@ -124,15 +152,15 @@ class _HomePageStudentsMembersState extends State<HomePageStudentsMembers> {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 20,
                 children: [
-                  Featureswidget(myConstants: myConstants, heading: 'NEWS FEED', page: UserFeed(isadmin: false),Imageurl: "assets/news.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'MENTORSHIP', page: MentorsPage(),Imageurl: "assets/Mentorship.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'PROJECTS', page: ProjectsPage(),Imageurl: "assets/Projects.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'EVENTS', page: EventsPage(),Imageurl: "assets/Events.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'COURSES', page: CoursesPage(),Imageurl: "assets/Courses.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'BOOKS', page: BooksPage(),Imageurl: "assets/Books.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'INTERNSHIP', page: InternPage(),Imageurl: "assets/Internship.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'GIFT', page: GiftPage(),Imageurl: "assets/Gift.png",),
-                  Featureswidget(myConstants: myConstants, heading: 'REVIEW', page: ReviewPage(),Imageurl: "assets/Review.png",),
+                  Featureswidget(myConstants: myConstants, heading: 'NEWS FEED', page: UserFeed(isadmin: false),Imageurl: "assets/news.png",premiummatter: false,),
+                  Featureswidget(myConstants: myConstants, heading: 'MENTORSHIP', page: MentorsPage(),Imageurl: "assets/Mentorship.png",premiummatter: true,),
+                  Featureswidget(myConstants: myConstants, heading: 'PROJECTS', page: ProjectsPage(),Imageurl: "assets/Projects.png",premiummatter: true,),
+                  Featureswidget(myConstants: myConstants, heading: 'EVENTS', page: EventsPage(),Imageurl: "assets/Events.png",premiummatter: false,),
+                  Featureswidget(myConstants: myConstants, heading: 'COURSES', page: CoursesPage(),Imageurl: "assets/Courses.png",premiummatter: true,),
+                  Featureswidget(myConstants: myConstants, heading: 'BOOKS', page: BooksPage(isadmin: false,),Imageurl: "assets/Books.png",premiummatter: true,),
+                  Featureswidget(myConstants: myConstants, heading: 'INTERNSHIP', page: InternPage(isadmin: false,),Imageurl: "assets/Internship.png",premiummatter: true,),
+                  Featureswidget(myConstants: myConstants, heading: 'GIFT', page: GiftPage(),Imageurl: "assets/Gift.png",premiummatter: false,),
+                  Featureswidget(myConstants: myConstants, heading: 'REVIEW', page: ReviewPage(),Imageurl: "assets/Review.png",premiummatter: false,),
                 ],),
           ))
           /*Positioned(
